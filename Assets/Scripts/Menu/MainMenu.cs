@@ -54,6 +54,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
         // Set mode to multiplayer
         PhotonNetwork.OfflineMode = false;
         ConnectToServer.Instance.SetGameMode(GameMode.Multiplayer);
+        ConnectToServer.Instance.SetIsRoomCreator(true);
 
         // Go to create room scene
         if (PhotonNetwork.IsConnected)
