@@ -117,7 +117,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+                return false;
 #endif
             }
         }
@@ -139,10 +139,10 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+            Debug.LogError("Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
             AssignAnimationIDs();
@@ -168,11 +168,11 @@ namespace StarterAssets
 
         private void AssignAnimationIDs()
         {
-            _animIDSpeed = Animator.StringToHash("Speed");
-            _animIDGrounded = Animator.StringToHash("Grounded");
-            _animIDJump = Animator.StringToHash("Jump");
-            _animIDFreeFall = Animator.StringToHash("FreeFall");
-            _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDSpeed = Animator.StringToHash("Blend");
+            // _animIDGrounded = Animator.StringToHash("Grounded");
+            // _animIDJump = Animator.StringToHash("Jump");
+            // _animIDFreeFall = Animator.StringToHash("FreeFall");
+            // _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
 
         private void GroundedCheck()
@@ -186,7 +186,7 @@ namespace StarterAssets
             // update animator if using character
             if (_hasAnimator)
             {
-                _animator.SetBool(_animIDGrounded, Grounded);
+                SafeSetBool(_animIDGrounded, Grounded);
             }
         }
 
@@ -274,8 +274,13 @@ namespace StarterAssets
             // update animator if using character
             if (_hasAnimator)
             {
-                _animator.SetFloat(_animIDSpeed, _animationBlend);
-                _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+                // _animator.SetFloat(_animIDSpeed, _animationBlend);
+                // _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+
+                // Normalize speed to Jammo's 0-0.6 range
+                float jammoBlend = Mathf.Clamp(_animationBlend / SprintSpeed * 0.6f, 0f, 0.6f);
+                SafeSetFloat(_animIDSpeed, jammoBlend);
+                SafeSetFloat(_animIDMotionSpeed, inputMagnitude);
             }
         }
 
@@ -289,8 +294,8 @@ namespace StarterAssets
                 // update animator if using character
                 if (_hasAnimator)
                 {
-                    _animator.SetBool(_animIDJump, false);
-                    _animator.SetBool(_animIDFreeFall, false);
+                    SafeSetBool(_animIDJump, false);
+                    SafeSetBool(_animIDFreeFall, false);
                 }
 
                 // stop our velocity dropping infinitely when grounded
@@ -308,7 +313,7 @@ namespace StarterAssets
                     // update animator if using character
                     if (_hasAnimator)
                     {
-                        _animator.SetBool(_animIDJump, true);
+                        SafeSetBool(_animIDJump, true);
                     }
                 }
 
@@ -333,7 +338,7 @@ namespace StarterAssets
                     // update animator if using character
                     if (_hasAnimator)
                     {
-                        _animator.SetBool(_animIDFreeFall, true);
+                        SafeSetBool(_animIDFreeFall, true);
                     }
                 }
 
@@ -387,6 +392,19 @@ namespace StarterAssets
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
+        }
+
+        // Helper methods to safely set animator parameters
+        private void SafeSetBool(int id, bool value)
+        {
+            if (!_hasAnimator || id == 0) return;
+            _animator.SetBool(id, value);
+        }
+
+        private void SafeSetFloat(int id, float value)
+        {
+            if (!_hasAnimator || id == 0) return;
+            _animator.SetFloat(id, value);
         }
     }
 }
