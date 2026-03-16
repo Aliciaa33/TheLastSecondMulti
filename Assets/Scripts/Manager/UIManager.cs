@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Photon.Pun;
 
 public class UIManager : MonoBehaviour
 {
@@ -152,11 +153,51 @@ public class UIManager : MonoBehaviour
                 btn.onClick.AddListener(() =>
                 {
                     gameOverCanvas.SetActive(false);
-                    // Use the same clean-quit flow as PauseManager
                     Time.timeScale = 1f;
-                    LoadingSceneManager.RedirectToLoading(returnTo: "Menu");
+                    StartCoroutine(LeaveRoomThenRedirectToMenu());
                 });
         }
+    }
+
+    private IEnumerator LeaveRoomThenRedirectToMenu()
+    {
+        // Tell ConnectToServer this is intentional
+        // Must be done BEFORE Disconnect() fires OnDisconnected
+        if (ConnectToServer.Instance != null)
+            ConnectToServer.Instance.StopWatchingConnection();
+
+        // Leave the current room if we are in one
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+            float timeout = 5f;
+            while (PhotonNetwork.InRoom && timeout > 0f)
+            {
+                timeout -= Time.deltaTime;
+                yield return null;
+            }
+            if (PhotonNetwork.InRoom)
+            {
+                Debug.LogWarning("[UIManager] LeaveRoom timed out before menu redirect.");
+            }
+        }
+
+        // This ensures the next scene starts with a clean connection state.
+        // LoadingSceneManager will reconnect when the Loading scene runs.
+        if (Photon.Pun.PhotonNetwork.IsConnected)
+        {
+            Photon.Pun.PhotonNetwork.Disconnect();
+
+            float timeout = 5f;
+            while (Photon.Pun.PhotonNetwork.IsConnected && timeout > 0f)
+            {
+                timeout -= Time.unscaledDeltaTime;
+                yield return null;
+            }
+        }
+
+        ConnectToServer.Instance?.SetIsRoomCreator(false);
+        LoadingSceneManager.RedirectToLoading(returnTo: "Menu");
     }
 
     public void RestartButton()

@@ -37,7 +37,7 @@ public class GameOverPanelStyler : MonoBehaviour
         if (bg) { bg.color = PanelBg; bg.sprite = RoundedSprite(); bg.type = Image.Type.Sliced; }
 
         // Buttons wired here — colours updated in ApplyResultStyle
-        StyleButton("RestartButton",  ButtonCream, TextDark,    false);
+        // StyleButton("RestartButton",  ButtonCream, TextDark,    false);
         StyleButton("QuitMenuButton", ButtonRed,   TextDarkRed, true);
     }
 
@@ -123,15 +123,15 @@ public class GameOverPanelStyler : MonoBehaviour
         if (statsBg) statsBg.color = new Color(accent.r, accent.g, accent.b, 0.08f);
 
         // ── Restart button: green on win, cream on loss ───────────────────
-        if (win)
-        {
-            StyleButton("RestartButton", NeonGreen,
-                new Color(0.04f, 0.25f, 0.10f), false, isWinRestart: true);
-        }
-        else
-        {
-            StyleButton("RestartButton", ButtonCream, TextDark, false);
-        }
+        // if (win)
+        // {
+        //     StyleButton("RestartButton", NeonGreen,
+        //         new Color(0.04f, 0.25f, 0.10f), false, isWinRestart: true);
+        // }
+        // else
+        // {
+        //     StyleButton("RestartButton", ButtonCream, TextDark, false);
+        // }
     }
 
     // ── Button styling ────────────────────────────────────────────────────

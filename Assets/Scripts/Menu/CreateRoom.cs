@@ -19,7 +19,8 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        ConnectToServer.Instance.SetIsRoomCreator(true);
+        bool isRoomCreator = ConnectToServer.Instance.IsRoomCreator();
+        // Debug.Log($"[CreateRoom] isRoomCreator={isRoomCreator}, InRoom={PhotonNetwork.InRoom}, IsMasterClient={PhotonNetwork.IsMasterClient}");
 
         if (startButton != null)
         {
@@ -27,7 +28,19 @@ public class CreateRoom : MonoBehaviourPunCallbacks
             Debug.Log("IsMasterClient: " + PhotonNetwork.IsMasterClient);
         }
 
-        StartCoroutine(WaitAndCreateRoom());
+        if (isRoomCreator)
+        {
+            StartCoroutine(WaitAndCreateRoom());
+        }
+        else if (PhotonNetwork.InRoom)
+        {
+            isRoomCreated = true;
+            RefreshPlayerList();
+        }
+        else
+        {
+            Debug.LogWarning("[CreateRoom] Not room creator and not in room. Skipping room creation.");
+        }
     }
 
     private IEnumerator WaitAndCreateRoom()
@@ -160,6 +173,15 @@ public class CreateRoom : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.LogError("Failed to create room: " + message);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Joined room callback in CreateRoom: " + PhotonNetwork.CurrentRoom.Name);
+        isRoomCreated = true;
+        RefreshPlayerList();
+        if (startButton != null)
+            startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
