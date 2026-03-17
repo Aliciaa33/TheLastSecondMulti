@@ -170,8 +170,8 @@ namespace StarterAssets
         {
             _animIDSpeed = Animator.StringToHash("Blend");
             // _animIDGrounded = Animator.StringToHash("Grounded");
-            // _animIDJump = Animator.StringToHash("Jump");
-            // _animIDFreeFall = Animator.StringToHash("FreeFall");
+            _animIDJump = Animator.StringToHash("Jump");
+            _animIDFreeFall = Animator.StringToHash("FreeFall");
             // _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
 
