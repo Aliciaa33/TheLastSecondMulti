@@ -23,6 +23,10 @@ public class MainMenu : MonoBehaviourPunCallbacks
             GameObject gm = new GameObject("ConnectToServer");
             gm.AddComponent<ConnectToServer>();
         }
+
+        // Play background music
+        musicSource.clip = background;
+        musicSource.Play();
     }
 
     public void OnPlayButtonClicked()
