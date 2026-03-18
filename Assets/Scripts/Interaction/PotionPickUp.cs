@@ -7,9 +7,12 @@ using Photon.Pun;
 /// </summary>
 public class PotionPickUp : InteractableBase
 {
+    AudioManager audioManager;
+
     void Start()
     {
         interactionText = "Press F to pick up potion";
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     public override void Interact()
@@ -17,6 +20,8 @@ public class PotionPickUp : InteractableBase
         // Add to inventory — does NOT restore HP yet
         if (InventoryManager.Instance != null)
             InventoryManager.Instance.AddPotion();
+        // Play sound effect for local player
+        audioManager.PlaySFX(audioManager.interact);
 
         // Destroy the world object
         PhotonView pv = GetComponent<PhotonView>();
