@@ -6,12 +6,9 @@ public class HintPickUp : InteractableBase
     public string number;
     public string hint;
 
-    AudioManager audioManager;
-
     void Start()
     {
         interactionText = "Press F to pick up hint";
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
 
         PhotonView pv = GetComponent<PhotonView>();
         if (pv != null && pv.InstantiationData != null)
@@ -30,15 +27,17 @@ public class HintPickUp : InteractableBase
         // Add to local inventory immediately
         InventoryManager.Instance?.AddHint(number, hint);
         UIManager.Instance?.ShowToast("Collected Number: " + number);
-        // Play sound effect for local player
-        audioManager.PlaySFX(audioManager.interact);
 
         PhotonView pv = GetComponent<PhotonView>();
         if (pv != null && PhotonNetwork.IsConnected)
+        {
             // Ask MasterClient to destroy this object for everyone
             pv.RPC("RPC_DestroyHint", RpcTarget.MasterClient);
+        }
         else
+        {
             Destroy(gameObject);
+        }
     }
 
     [PunRPC]

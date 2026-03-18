@@ -264,6 +264,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    /*
     float GetGroundHeight(Vector3 pos)
     {
         RaycastHit hit;
@@ -279,9 +280,53 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.LogWarning($"No ground found at position: {pos}");
         return pos.y; // 如果没找到地面，返回原 Y 值
     }
+    */
+
 
     // generate different heights for hint, potion
     // 1 = hint, 2 = potion
+
+
+    Vector3 FindValidPos(int type)
+    {
+        int surfaceMask = LayerMask.GetMask("Ground", "Table");
+        int obstacles = LayerMask.GetMask("Obstacle");
+        int tables = LayerMask.GetMask("Table");
+
+        // 搜索区域覆盖整个 terrain（200×150），留 10 单位边距
+        Vector3 areaCenter = new Vector3(100f, 0f, 75f);
+        Vector3 areaSize = new Vector3(180f, 50f, 130f);
+
+        float heightOffset;
+        if (type == 1)
+            heightOffset = 0.1f;
+        else if (type == 2)
+            heightOffset = 0.29f;
+        else
+            heightOffset = 0f;
+
+        Vector3 result;
+        bool found = SpawnValidator.TryFindSafeSpawnPoint(
+            areaCenter,
+            areaSize,
+            out result,
+            maxAttempts: 50,
+            spawnSurfaceMask: surfaceMask,
+            obstacleMask: obstacles,
+            tableMask: tables,
+            clearRadius: 1.5f,
+            playerHeight: 2f,
+            spawnHeightOffset: heightOffset
+        );
+
+        if (found)
+            return result;
+
+        Debug.LogWarning("Failed to find valid position after 50 attempts.");
+        return Vector3.zero;
+    }
+
+    /*
     Vector3 FindValidPos(int type)
     {
         Vector3 randomPos;
@@ -311,6 +356,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.LogWarning("Failed to find valid hint position after 100 attempts.");
         return Vector3.zero; // Return zero vector to indicate failure
     }
+    */
+
+
+
+
 
     void GenerateHintPos()
     {

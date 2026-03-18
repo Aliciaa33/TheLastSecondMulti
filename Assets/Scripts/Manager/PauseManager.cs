@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections;
+using TMPro;
 
 /// <summary>
 /// Handles P/Escape key toggling, Time.timeScale, cursor unlock, and all pause button actions.
-/// Leaves the Photon room cleanly before returning to the main menu.
+/// Mirrors the same SetUIMode pattern used by InventoryUI.
 /// </summary>
 public class PauseManager : MonoBehaviour
 {
     [Header("Scene Names")]
-    [SerializeField] private string mainMenuSceneName = "Menu";
+    [SerializeField] private string menuSceneName = "Menu";
 
     [Header("Pause Keys")]
     [SerializeField] private KeyCode pauseKey = KeyCode.P;
@@ -23,7 +23,6 @@ public class PauseManager : MonoBehaviour
 
     private bool isPaused = false;
     private bool settingsOpen = false;
-    private bool isQuitting = false; // guard against double-quit
 
     private StarterAssets.StarterAssetsInputs playerInputs;
 
@@ -38,7 +37,7 @@ public class PauseManager : MonoBehaviour
         sfxSlider = GameObject.Find("SFXSlider")?.GetComponent<Slider>();
 
         if (pauseCanvas == null)
-            Debug.LogWarning("[PauseManager] 'PauseCanvas' not found.");
+            Debug.LogWarning("[PauseManager] 'PauseCanvas' not found. Run Tools > Create Pause Panel.");
 
         WireButton("ResumeButton", Resume);
         WireButton("RestartButton", Restart);
@@ -61,20 +60,22 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        if (isQuitting) return;
-
+        // Same lazy-find pattern as InventoryUI — safe even if player loads late
         if (playerInputs == null)
         {
             FindPlayerInputs();
             return;
         }
 
-        if (playerInputs.IsUIMode && !isPaused) return;
+        // Block pause input while inventory (or any other UI) is already open
+        if (playerInputs.IsUIMode && !isPaused)
+            return;
 
         bool togglePressed = Input.GetKeyDown(pauseKey)
             || (escapeAlsoPauses && Input.GetKeyDown(KeyCode.Escape));
 
-        if (togglePressed) TogglePause();
+        if (togglePressed)
+            TogglePause();
     }
 
     void FindPlayerInputs()
@@ -98,7 +99,11 @@ public class PauseManager : MonoBehaviour
     {
         isPaused = true;
         Time.timeScale = 0f;
-        if (playerInputs != null) playerInputs.SetUIMode(true);
+
+        // Unlock cursor exactly like InventoryUI does
+        if (playerInputs != null)
+            playerInputs.SetUIMode(true);
+
         SetPanelVisible(true);
     }
 
@@ -106,9 +111,15 @@ public class PauseManager : MonoBehaviour
     {
         isPaused = false;
         Time.timeScale = 1f;
-        if (playerInputs != null) playerInputs.SetUIMode(false);
+
+        // Restore game input mode exactly like InventoryUI.CloseInventory() does
+        if (playerInputs != null)
+            playerInputs.SetUIMode(false);
+
         SetPanelVisible(false);
-        if (settingsOpen) ToggleSettings();
+
+        if (settingsOpen)
+            ToggleSettings();
     }
 
     public void Restart()
@@ -118,78 +129,18 @@ public class PauseManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    /// <summary>
-    /// Cleanly leaves the Photon room before loading the main menu.
-    /// Prevents the "SendError / NetworkUnreachable" bug caused by
-    /// abandoning an active Photon connection mid-game.
-    /// </summary>
     public void QuitToMenu()
     {
-        if (isQuitting) return;
-        isQuitting = true;
-
-        // Restore time and cursor immediately so UI stays responsive
         Time.timeScale = 1f;
-        if (playerInputs != null) playerInputs.SetUIMode(false);
-
-        StartCoroutine(QuitToMenuCoroutine());
-    }
-
-    private IEnumerator QuitToMenuCoroutine()
-    {
-        // ── Step 0: Tell ConnectToServer this is intentional ──────────────
-        // Must be done BEFORE Disconnect() fires OnDisconnected
-        if (ConnectToServer.Instance != null)
-            ConnectToServer.Instance.StopWatchingConnection();
-
-        // ── Step 1: Leave the current room if we are in one ───────────────
-        if (Photon.Pun.PhotonNetwork.InRoom)
-        {
-            // Disable scene sync BEFORE leaving — prevents Photon from trying
-            // to write room properties when the Loading scene loads mid-leave,
-            // which causes the "SetProperties / client state: Leaving" error.
-            Photon.Pun.PhotonNetwork.AutomaticallySyncScene = false;
-
-            Photon.Pun.PhotonNetwork.LeaveRoom();
-
-            // Wait until Photon confirms we have left the room
-            float timeout = 5f;
-            while (Photon.Pun.PhotonNetwork.InRoom && timeout > 0f)
-            {
-                timeout -= Time.unscaledDeltaTime;
-                yield return null;
-            }
-
-            if (Photon.Pun.PhotonNetwork.InRoom)
-                Debug.LogWarning("[PauseManager] LeaveRoom timed out — forcing disconnect.");
-        }
-
-        // ── Step 2: Disconnect from Photon entirely ───────────────────────
-        // This ensures the next scene starts with a clean connection state.
-        // LoadingSceneManager will reconnect when the Loading scene runs.
-        if (Photon.Pun.PhotonNetwork.IsConnected)
-        {
-            Photon.Pun.PhotonNetwork.Disconnect();
-
-            float timeout = 5f;
-            while (Photon.Pun.PhotonNetwork.IsConnected && timeout > 0f)
-            {
-                timeout -= Time.unscaledDeltaTime;
-                yield return null;
-            }
-        }
-
-        // ── Step 3: Load the Loading scene (which reconnects) ────────────
-        // We go through the Loading scene rather than jumping straight to
-        // Menu so that Photon is fully reconnected before the player
-        // tries to create/join a room again.
-        LoadingSceneManager.RedirectToLoading(returnTo: mainMenuSceneName);
+        if (playerInputs != null) playerInputs.SetUIMode(true);
+        SceneManager.LoadScene(menuSceneName);
     }
 
     public void ToggleSettings()
     {
         settingsOpen = !settingsOpen;
-        if (settingsSection != null) settingsSection.SetActive(settingsOpen);
+        if (settingsSection != null)
+            settingsSection.SetActive(settingsOpen);
     }
 
     public bool IsPaused => isPaused;
@@ -212,7 +163,8 @@ public class PauseManager : MonoBehaviour
 
     void SetPanelVisible(bool visible)
     {
-        if (pauseCanvas != null) pauseCanvas.SetActive(visible);
+        if (pauseCanvas != null)
+            pauseCanvas.SetActive(visible);
     }
 
     void WireButton(string goName, UnityEngine.Events.UnityAction action)

@@ -9,7 +9,6 @@ TagManager:
   - Potion
   - Prefab
   - CinemachineTarget
-  - Audio
   layers:
   - Default
   - TransparentFX
@@ -20,7 +19,7 @@ TagManager:
   - ground
   - Ground
   - Obstacles
-  - 
+  - Table
   - 
   - 
   - 

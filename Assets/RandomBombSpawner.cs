@@ -9,7 +9,7 @@ public class RandomBombPositioner : MonoBehaviourPun
     public GameObject bombPrefab;
     public float initialSpawnDelay = 2f;
     public float respawnDelay = 3f;
-    public int maxAttempt = 12;
+    public int maxAttempt = 30;
 
     [Header("Spawn Area")]
     public BoxCollider spawnArea;
@@ -17,7 +17,11 @@ public class RandomBombPositioner : MonoBehaviourPun
     [Header("Environment Checks")]
     public LayerMask groundMask;
     public LayerMask obstacleMask;
-    public float checkRadius = 0.5f;
+    public float checkRadius = 1.5f;
+    public float PlayerHeight = 2f;
+
+    // add Table Mask:
+    public LayerMask tableMask;
 
     private bool isWaitingToSpawn = false;
     private bool isGameOver = false;
@@ -118,7 +122,34 @@ public class RandomBombPositioner : MonoBehaviourPun
         }
 
         Debug.Log("开始尝试生成新炸弹...");
+
+        int surfaceMask = groundMask | tableMask;
+        int obstacles = obstacleMask;
+        int table = tableMask;
+
+        Vector3 spawnPosition;
+        bool found = SpawnValidator.TryFindSafeSpawnPointInBox(
+            spawnArea,
+            out spawnPosition,
+            maxAttempts: maxAttempt,
+            spawnSurfaceMask: surfaceMask,
+            obstacleMask: obstacles,
+            tableMask: table,
+            clearRadius: checkRadius,
+            playerHeight: PlayerHeight,
+            spawnHeightOffset: 0.05f
+        );
+
+        if (found)
+        {
+            PhotonNetwork.Instantiate("BombModel", spawnPosition, Quaternion.identity);
+            Debug.Log("✅ 炸弹生成成功! 位置: " + spawnPosition);
+            return true;
+        }
+
+        /*
         int surfaceMask = groundMask | obstacleMask;
+
 
         for (int i = 0; i < maxAttempt; i++)
         {
@@ -151,6 +182,7 @@ public class RandomBombPositioner : MonoBehaviourPun
                 }
             }
         }
+        */
 
         Debug.LogWarning("❌ 找不到合适的生成位置，稍后重试...");
         if (!isGameOver)

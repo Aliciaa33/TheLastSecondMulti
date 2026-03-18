@@ -109,8 +109,6 @@ public class RoomList : MonoBehaviourPunCallbacks
     private void JoinRoom(string roomName)
     {
         Debug.Log("Joining room: " + roomName);
-        ConnectToServer.Instance.SetGameMode(GameMode.Multiplayer);
-        ConnectToServer.Instance.SetIsRoomCreator(false);
         PhotonNetwork.JoinRoom(roomName);
     }
 

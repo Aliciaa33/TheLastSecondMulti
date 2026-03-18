@@ -20,7 +20,6 @@ public class InventoryItemUI : MonoBehaviour
         {
             hintText.text = hint;
             hintText.alignment = TextAlignmentOptions.Center;
-            Debug.Log("Hint Text: " + hintText.text);
         }
     }
 }

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
 using System.Collections.Generic;
 
 public class InventoryUI : MonoBehaviour
@@ -15,168 +14,142 @@ public class InventoryUI : MonoBehaviour
     public TextMeshProUGUI inventoryCountText;
     public Button inventoryCloseButton;
 
-    [Header("Potion UI")]
-    public TextMeshProUGUI potionCountText;
-    public Button usePotionButton;
-
     private bool isInventoryOpen = false;
     private StarterAssets.StarterAssetsInputs playerInputs;
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else { Destroy(gameObject); return; }
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
     {
+        // 初始化UI状态
         if (inventoryPanel != null)
             inventoryPanel.SetActive(false);
 
+        // 设置关闭按钮事件
         if (inventoryCloseButton != null)
+        {
             inventoryCloseButton.onClick.AddListener(CloseInventory);
-
-        if (usePotionButton != null)
-            usePotionButton.onClick.AddListener(OnUsePotionClicked);
+        }
     }
 
     void Update()
     {
-        if (playerInputs == null) { FindPlayerInputs(); return; }
-        if (playerInputs.GetInventoryInput()) ToggleInventory();
+        // 因为InventoryUI在场景中可能比玩家对象先加载，所以在Update中尝试获取玩家输入组件
+        if (playerInputs == null)
+        {
+            FindPlayerInputs();
+            return;
+        }
+
+        if (playerInputs.GetInventoryInput())
+            ToggleInventory();
+
+        // // 使用 Input System 检测库存按键
+        // if (playerInputs != null && playerInputs.GetInventoryInput())
+        //     ToggleInventory();
+
+        // // ESC键关闭库存
+        // if (isInventoryOpen && playerInputs.GetInventoryInput())
+        // {
+        //     CloseInventory();
+        // }
     }
 
     void FindPlayerInputs()
     {
-        foreach (GameObject p in GameObject.FindGameObjectsWithTag("Player"))
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
         {
-            if (p == null) continue;
-            playerInputs = p.GetComponent<StarterAssets.StarterAssetsInputs>();
-            if (playerInputs != null) break;
+            if (player != null)
+            {
+                playerInputs = player.GetComponent<StarterAssets.StarterAssetsInputs>();
+                if (playerInputs != null)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Player object with 'Player' tag not found!");
+            }
         }
     }
 
-    // ── Toggle / Open / Close ─────────────────────────────────────────────
-
     public void ToggleInventory()
     {
-        if (isInventoryOpen) CloseInventory(); else OpenInventory();
-    }
+        isInventoryOpen = !isInventoryOpen;
+        inventoryPanel.SetActive(isInventoryOpen);
 
-    public void OpenInventory()
-    {
-        isInventoryOpen = true;
-        if (inventoryPanel != null) inventoryPanel.SetActive(true);
-        if (playerInputs != null) playerInputs.SetUIMode(true);
-        StartCoroutine(ShowInventoryNextFrame());
+        // 切换输入模式
+        if (playerInputs != null)
+        {
+            playerInputs.SetUIMode(isInventoryOpen);
+        }
+
+        if (isInventoryOpen)
+        {
+            ShowInventory();
+        }
     }
 
     public void CloseInventory()
     {
         isInventoryOpen = false;
-        if (inventoryPanel != null) inventoryPanel.SetActive(false);
-        if (playerInputs != null) playerInputs.SetUIMode(false);
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(false);
+
+        // 恢复游戏输入模式
+        if (playerInputs != null)
+        {
+            playerInputs.SetUIMode(false);
+        }
     }
 
-    public void RefreshIfOpen()
+    public void ShowInventory()
     {
-        if (isInventoryOpen)
-            StartCoroutine(ShowInventoryNextFrame());
-    }
+        // 清空当前网格
+        foreach (Transform child in inventoryGrid)
+            Destroy(child.gameObject);
 
-    // ── Coroutine: clear → wait one frame → populate → rebuild ────────────
-    // Waiting one frame lets Unity actually process the Destroy() calls
-    // before we instantiate new cards and force the layout rebuild.
-    IEnumerator ShowInventoryNextFrame()
-    {
-        // 1. Destroy all existing cards
-        if (inventoryGrid != null)
-            foreach (Transform child in inventoryGrid)
-                Destroy(child.gameObject);
-
-        // 2. Wait for Destroy to be processed
-        yield return null;
-
-        // 3. Populate hints
+        // 创建物品UI
         if (InventoryManager.Instance != null)
         {
-            List<InventoryManager.HintItem> hints =
-                InventoryManager.Instance.GetCollectedHints();
+            List<InventoryManager.HintItem> hints = InventoryManager.Instance.GetCollectedHints();
+            foreach (InventoryManager.HintItem hint in hints)
+                CreateHintItemUI(hint);
 
-            foreach (var hint in hints)
-                CreateHintCard(hint);
-
-            UpdateHintCount(hints.Count);
-        }
-
-        // 4. Populate potions
-        ShowPotions();
-
-        // 5. Force layout rebuild — now that cards actually exist and old
-        //    ones are truly gone, this correctly resizes the content rect.
-        if (inventoryGrid != null)
-        {
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(
-                inventoryGrid.GetComponent<RectTransform>());
-            // Canvas.ForceUpdateCanvases();
-
-            // RectTransform gridRect = inventoryGrid.GetComponent<RectTransform>();
-            // LayoutRebuilder.ForceRebuildLayoutImmediate(gridRect);
-            // LayoutRebuilder.ForceRebuildLayoutImmediate(
-            //     gridRect.parent.GetComponent<RectTransform>());
-        }
-
-        // 6. Re-style cards
-        InventoryPanelStyler styler =
-            inventoryPanel != null
-            ? inventoryPanel.GetComponent<InventoryPanelStyler>()
-              ?? inventoryPanel.GetComponentInParent<InventoryPanelStyler>()
-            : FindObjectOfType<InventoryPanelStyler>();
-        if (styler != null) styler.RefreshItemCards();
-    }
-
-    public void ShowInventory() => StartCoroutine(ShowInventoryNextFrame());
-
-    void ShowPotions()
-    {
-        if (InventoryManager.Instance == null) return;
-        int count = InventoryManager.Instance.GetPotionCount();
-
-        if (potionCountText != null)
-            potionCountText.text = $"x {count}";
-
-        if (usePotionButton != null)
-        {
-            usePotionButton.interactable = count > 0;
-            Image btnImg = usePotionButton.GetComponent<Image>();
-            if (btnImg != null)
-                btnImg.color = count > 0
-                    ? new Color(0.96f, 0.93f, 0.85f, 1f)
-                    : new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            // 更新数量
+            UpdateInventoryCount();
         }
     }
 
-    void CreateHintCard(InventoryManager.HintItem hintItem)
+    public void UpdateInventoryCount()
     {
-        if (inventoryItem == null || inventoryGrid == null) return;
-        GameObject card = Instantiate(inventoryItem, inventoryGrid);
-        InventoryItemUI ui = card.GetComponent<InventoryItemUI>();
-        if (ui != null)
-            ui.SetupHintItem(hintItem.number, hintItem.hint);
+        if (inventoryCountText != null && InventoryManager.Instance != null)
+        {
+            int count = InventoryManager.Instance.GetCollectedHints().Count;
+            inventoryCountText.text = $"Total: {count}";
+        }
+    }
+
+    void CreateHintItemUI(InventoryManager.HintItem hintItem)
+    {
+        GameObject itemUI = Instantiate(inventoryItem, inventoryGrid);
+        InventoryItemUI itemUIComponent = itemUI.GetComponent<InventoryItemUI>();
+
+        if (itemUIComponent != null)
+            itemUIComponent.SetupHintItem(hintItem.number, hintItem.hint);
         else
-            Debug.LogError("[InventoryUI] InventoryItemUI not found on card prefab.");
-    }
-
-    void UpdateHintCount(int count)
-    {
-        if (inventoryCountText != null)
-            inventoryCountText.text = $"HINTS COLLECTED: {count}";
-    }
-
-    void OnUsePotionClicked()
-    {
-        if (InventoryManager.Instance != null)
-            InventoryManager.Instance.UsePotion();
+            Debug.LogError("InventoryItemUI component not found on card prefab!");
     }
 }

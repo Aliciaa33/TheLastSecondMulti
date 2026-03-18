@@ -9,10 +9,6 @@ public class MainMenu : MonoBehaviourPunCallbacks
 {
     [SerializeField] private TMP_InputField playerNameInput;
 
-    [Header("Audio Source")]
-    [SerializeField] AudioSource musicSource;
-    public AudioClip background;
-
     private string playerName;
 
     void Start()
@@ -23,10 +19,6 @@ public class MainMenu : MonoBehaviourPunCallbacks
             GameObject gm = new GameObject("ConnectToServer");
             gm.AddComponent<ConnectToServer>();
         }
-
-        // Play background music
-        musicSource.clip = background;
-        musicSource.Play();
     }
 
     public void OnPlayButtonClicked()
@@ -62,7 +54,6 @@ public class MainMenu : MonoBehaviourPunCallbacks
         // Set mode to multiplayer
         PhotonNetwork.OfflineMode = false;
         ConnectToServer.Instance.SetGameMode(GameMode.Multiplayer);
-        ConnectToServer.Instance.SetIsRoomCreator(true);
 
         // Go to create room scene
         if (PhotonNetwork.IsConnected)
@@ -105,9 +96,9 @@ public class MainMenu : MonoBehaviourPunCallbacks
 
     private string GetOrGeneratePlayerName()
     {
-        if (playerNameInput == null)
+        if(playerNameInput == null)
         {
-
+            
         }
         // If player entered a name, use it
         if (playerNameInput != null && !string.IsNullOrEmpty(playerNameInput.text))

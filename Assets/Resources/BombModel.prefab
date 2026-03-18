@@ -231,6 +231,7 @@ GameObject:
   - component: {fileID: 1259441969288779192}
   - component: {fileID: 6621577297169271653}
   - component: {fileID: -7937726609716159124}
+  - component: {fileID: 5538119351060284875}
   m_Layer: 0
   m_Name: BombModel
   m_TagString: Untagged
@@ -399,7 +400,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -7937726609716159124}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -419,6 +421,21 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &5538119351060284875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4291548574516195763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f8ad8d2b9caf47d78de0f2dc1d1e9ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectiveType: 0
+  markerTarget: {fileID: 0}
+  rotateIconWithTarget: 1
 --- !u!1 &7590910755241737667
 GameObject:
   m_ObjectHideFlags: 0
