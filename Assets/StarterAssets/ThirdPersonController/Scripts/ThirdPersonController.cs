@@ -28,9 +28,9 @@ namespace StarterAssets
         [Tooltip("Acceleration and deceleration")]
         public float SpeedChangeRate = 10.0f;
 
-        public AudioClip LandingAudioClip;
-        public AudioClip[] FootstepAudioClips;
-        [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
+        // public AudioClip LandingAudioClip;
+        // public AudioClip[] FootstepAudioClips;
+        // [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
 
         [Space(10)]
         [Tooltip("The height the player can jump")]
@@ -122,6 +122,11 @@ namespace StarterAssets
             }
         }
 
+        // Audio Management
+        AudioManager audioManager;
+        private float _footstepTimer = 0f;
+        public float walkStepInterval = 0.5f;
+        public float runStepInterval = 0.3f;
 
         private void Awake()
         {
@@ -130,6 +135,8 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+
+            audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         }
 
         private void Start()
@@ -274,14 +281,13 @@ namespace StarterAssets
             // update animator if using character
             if (_hasAnimator)
             {
-                // _animator.SetFloat(_animIDSpeed, _animationBlend);
-                // _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
-
                 // Normalize speed to Jammo's 0-0.6 range
                 float jammoBlend = Mathf.Clamp(_animationBlend / SprintSpeed * 0.6f, 0f, 0.6f);
                 SafeSetFloat(_animIDSpeed, jammoBlend);
                 SafeSetFloat(_animIDMotionSpeed, inputMagnitude);
             }
+
+            HandleFootstepAudio();
         }
 
         private void JumpAndGravity()
@@ -315,6 +321,9 @@ namespace StarterAssets
                     {
                         SafeSetBool(_animIDJump, true);
                     }
+
+                    // Play jump sound effect
+                    audioManager.PlaySFX(audioManager.jumping);
                 }
 
                 // jump timeout
@@ -374,23 +383,27 @@ namespace StarterAssets
                 GroundedRadius);
         }
 
-        private void OnFootstep(AnimationEvent animationEvent)
+        // Play footstep sounds based on movement and grounded state
+        private void HandleFootstepAudio()
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
-            {
-                if (FootstepAudioClips.Length > 0)
-                {
-                    var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
-                }
-            }
-        }
+            if (audioManager == null) return;
 
-        private void OnLand(AnimationEvent animationEvent)
-        {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            // Only play when grounded and moving
+            if (!Grounded || _input.move == Vector2.zero)
             {
-                AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                _footstepTimer = 0f;
+                return;
+            }
+
+            bool isSprinting = _input.sprint;
+            float interval = isSprinting ? runStepInterval : walkStepInterval;
+            _footstepTimer += Time.deltaTime;
+
+            if (_footstepTimer >= interval)
+            {
+                _footstepTimer = 0f;
+                AudioClip clip = isSprinting ? audioManager.running : audioManager.walking;
+                audioManager.PlaySFX(clip);
             }
         }
 
