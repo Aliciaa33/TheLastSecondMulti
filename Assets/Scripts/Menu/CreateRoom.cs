@@ -8,7 +8,6 @@ using TMPro;
 
 public class CreateRoom : MonoBehaviourPunCallbacks
 {
-    // [SerializeField] private InputField roomNameInput;
     [SerializeField] private TextMeshProUGUI playerListText;
     [SerializeField] private TextMeshProUGUI roomInfoText;
     [SerializeField] private Button startButton;
@@ -16,26 +15,36 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
     private bool isRoomCreated = false;
     private string createdRoomName;
+    private bool isLeaving = false; // guard against double-back
 
     void Start()
     {
-        // Mark the player as room creator
-        ConnectToServer.Instance.SetIsRoomCreator(true);
+        bool isRoomCreator = ConnectToServer.Instance.IsRoomCreator();
+        // Debug.Log($"[CreateRoom] isRoomCreator={isRoomCreator}, InRoom={PhotonNetwork.InRoom}, IsMasterClient={PhotonNetwork.IsMasterClient}");
 
-        // Only creator can see start button
         if (startButton != null)
         {
             startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-            Debug.Log("IsMasterClient" + PhotonNetwork.IsMasterClient);
+            Debug.Log("IsMasterClient: " + PhotonNetwork.IsMasterClient);
         }
 
-        // Wait for Photon to be ready before creating room
-        StartCoroutine(WaitAndCreateRoom());
+        if (isRoomCreator)
+        {
+            StartCoroutine(WaitAndCreateRoom());
+        }
+        else if (PhotonNetwork.InRoom)
+        {
+            isRoomCreated = true;
+            RefreshPlayerList();
+        }
+        else
+        {
+            Debug.LogWarning("[CreateRoom] Not room creator and not in room. Skipping room creation.");
+        }
     }
 
     private IEnumerator WaitAndCreateRoom()
     {
-        // Wait until connected to Master Server and in lobby
         float timeout = 10f;
         while (!PhotonNetwork.IsConnectedAndReady && timeout > 0)
         {
@@ -49,7 +58,6 @@ public class CreateRoom : MonoBehaviourPunCallbacks
             yield break;
         }
 
-        // Now safe to create room
         string roomName = "" + Random.Range(1000, 9999);
         RoomOptions roomOptions = new RoomOptions
         {
@@ -68,11 +76,8 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        // Continuously update player list
         if (isRoomCreated)
-        {
             RefreshPlayerList();
-        }
     }
 
     public void OnStartGameButtonClicked()
@@ -85,79 +90,98 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
         Debug.Log("Starting game with " + PhotonNetwork.CurrentRoom.PlayerCount + " players");
 
-        // Set game mode based on player count
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-        {
             ConnectToServer.Instance.SetGameMode(GameMode.SinglePlayer);
-        }
         else
-        {
             ConnectToServer.Instance.SetGameMode(GameMode.Multiplayer);
-        }
 
-        // Load game scene
         PhotonNetwork.LoadLevel("Game");
     }
 
     private void RefreshPlayerList()
     {
-        if (PhotonNetwork.CurrentRoom == null)
-        {
-            return;
-        }
+        if (PhotonNetwork.CurrentRoom == null) return;
 
-        // Update room info
         if (roomInfoText != null)
         {
             roomInfoText.text = $"Room No.: {PhotonNetwork.CurrentRoom.Name}     " +
-                               $"Players: {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}" +
-                               $"\nCreator: {PhotonNetwork.MasterClient.NickName}";
+                                $"Players: {PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}" +
+                                $"\nCreator: {PhotonNetwork.MasterClient.NickName}";
         }
 
-        // Update player list
         if (playerListText != null)
         {
             string playerListStr = "";
             int index = 1;
             foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
             {
-                string creatorTag = (player == PhotonNetwork.LocalPlayer) ? " (You)" : "";
-                playerListStr += $"Player {index}: {player.NickName}{creatorTag}\n\n";
+                string tag = (player == PhotonNetwork.LocalPlayer) ? " (You)" : "";
+                playerListStr += $"Player {index}: {player.NickName}{tag}\n\n";
                 index++;
             }
-
             playerListText.text = playerListStr;
         }
-
-        // Check if room is full
-        // if (PhotonNetwork.CurrentRoom.PlayerCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
-        // {
-        //     if (roomInfoText != null)
-        //     {
-        //         roomInfoText.text += "\n[FULL - No more players can join]";
-        //     }
-        // }
     }
 
+    /// <summary>
+    /// Waits for LeaveRoom to complete before loading the Menu scene.
+    /// Going straight to SceneManager.LoadScene while Photon is still in
+    /// "Leaving" state causes the SetProperties error.
+    /// </summary>
     public void OnBackButtonClicked()
+    {
+        if (isLeaving) return;
+        isLeaving = true;
+        StartCoroutine(LeaveAndGoBack());
+    }
+
+    private IEnumerator LeaveAndGoBack()
     {
         if (PhotonNetwork.InRoom)
         {
+            // Disable scene sync BEFORE leaving so Photon does not try to
+            // write room properties when the Menu scene loads mid-leave.
+            // This is the root cause of the "SetProperties / client state: Leaving" error.
+            PhotonNetwork.AutomaticallySyncScene = false;
+
             PhotonNetwork.LeaveRoom();
+
+            // Wait until Photon confirms the room has been left
+            float timeout = 5f;
+            while (PhotonNetwork.InRoom && timeout > 0f)
+            {
+                timeout -= Time.deltaTime;
+                yield return null;
+            }
+
+            if (PhotonNetwork.InRoom)
+                Debug.LogWarning("[CreateRoom] LeaveRoom timed out — loading anyway.");
         }
+
         SceneManager.LoadScene("Menu");
     }
 
+    // ── Photon callbacks ──────────────────────────────────────────────────
+
     public override void OnCreatedRoom()
     {
-        Debug.Log("✓ Room created successfully!");
+        Debug.Log("Room created successfully: " + PhotonNetwork.CurrentRoom.Name);
         isRoomCreated = true;
         RefreshPlayerList();
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.LogError("✗ Failed to create room: " + message);
+        Debug.LogError("Failed to create room: " + message);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("Joined room callback in CreateRoom: " + PhotonNetwork.CurrentRoom.Name);
+        isRoomCreated = true;
+        RefreshPlayerList();
+        if (startButton != null)
+            startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -175,11 +199,7 @@ public class CreateRoom : MonoBehaviourPunCallbacks
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         Debug.Log("Master client switched to: " + newMasterClient.NickName);
-
-        // Update start button visibility when master changes
         if (startButton != null)
-        {
             startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-        }
     }
 }

@@ -9,6 +9,7 @@ TagManager:
   - Potion
   - Prefab
   - CinemachineTarget
+  - Audio
   layers:
   - Default
   - TransparentFX

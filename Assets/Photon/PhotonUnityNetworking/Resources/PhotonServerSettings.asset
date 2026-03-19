@@ -53,6 +53,8 @@ MonoBehaviour:
   - RPC_TriggerExplosion
   - RPC_updateDefusedBomb
   - RPC_SyncDefusedBombs
+  - RPC_AddPotion
+  - RPC_UsePotion
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
