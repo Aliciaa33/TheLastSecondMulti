@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: f6c01f6831b2040dbbf94bdb8f6ca0a7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bombPrefab: {fileID: 4291548574516195763, guid: abaf9f7990943458281945930bb34733, type: 3}
+  - spawnArea: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
