@@ -22427,8 +22427,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcPrefabResourcePath: WanderingNPC
-  spawnPosition: {x: 0, y: 0, z: 0}
+  spawnPosition: {x: 100, y: 1, z: 73}
   spawnRotation: {x: 0, y: 0, z: 0, w: 1}
+  navSampleMaxDistance: 5
 --- !u!4 &711070358
 Transform:
   m_ObjectHideFlags: 0
@@ -62942,7 +62943,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5202332473703336362, guid: 492a7ed7b3e6c49d3a6c031bcf0d52d7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3039035893045573720, guid: 492a7ed7b3e6c49d3a6c031bcf0d52d7, type: 3}
