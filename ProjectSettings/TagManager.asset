@@ -10,6 +10,7 @@ TagManager:
   - Prefab
   - CinemachineTarget
   - Audio
+  - MiniGameBox
   layers:
   - Default
   - TransparentFX
@@ -46,4 +47,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3613683995
+    locked: 0
+  - name: Rails
+    uniqueID: 1362611357
+    locked: 0
+  - name: Targets
+    uniqueID: 2327069983
+    locked: 0
+  - name: UI3D
+    uniqueID: 4139752327
     locked: 0

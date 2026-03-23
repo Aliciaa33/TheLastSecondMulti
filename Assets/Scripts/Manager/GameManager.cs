@@ -539,6 +539,13 @@ public class GameManager : MonoBehaviourPunCallbacks
             GameOver(true);
     }
 
+    // This RPC is called by MiniGameCooldownManager.StartCooldown() to trigger the cooldown on all clients.
+    [PunRPC]
+    public void RPC_StartMiniGameCooldown(float duration)
+    {
+        MiniGameCooldownManager.Instance?.ApplyCooldown(duration);
+    }
+
     void GameOver(bool win)
     {
         gameActive = false;
