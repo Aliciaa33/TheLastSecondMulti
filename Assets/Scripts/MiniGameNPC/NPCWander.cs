@@ -318,6 +318,9 @@ public class NPCWander : MonoBehaviourPunCallbacks
                 ResetAfterInteraction();
                 yield break;
             }
+
+
+
             yield return null;
         }
     }
