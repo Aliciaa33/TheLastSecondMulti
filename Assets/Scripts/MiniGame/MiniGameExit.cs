@@ -8,7 +8,7 @@ public class WhackAMoleExit : MonoBehaviour
         // Add to existing game over button, or create new one
         GetComponent<Button>().onClick.AddListener(() =>
         {
-            MiniGameManager.Instance.ExitMiniGame(WhackAMoleGameManager.Instance.win);
+            MiniGameManager.Instance.ExitMiniGame(WhackAMoleGameManager.Instance.IsWin());
 
             // Start cooldown for all players
             MiniGameCooldownManager.Instance?.StartCooldown();

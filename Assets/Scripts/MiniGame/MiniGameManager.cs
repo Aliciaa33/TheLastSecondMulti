@@ -126,12 +126,16 @@ public class MiniGameManager : MonoBehaviour
             var controller = player.GetComponent<StarterAssets.ThirdPersonController>();
             if (controller != null) controller.enabled = false;
 
-            // Also disable interaction so prompt disappears
+            // Disable interaction so prompt disappears
             var interaction = player.GetComponent<PlayerInteraction>();
             if (interaction != null)
             {
                 interaction.enabled = false;
             }
+
+            // Disable pause manager
+            if (PauseManager.Instance != null)
+                PauseManager.Instance.enabled = false;
         }
     }
 
@@ -143,7 +147,7 @@ public class MiniGameManager : MonoBehaviour
             var controller = player.GetComponent<StarterAssets.ThirdPersonController>();
             if (controller != null) controller.enabled = true;
 
-            // Also disable interaction so prompt disappears
+            // Also enable interaction & hide interaction prompt just in case
             var interaction = player.GetComponent<PlayerInteraction>();
             if (interaction != null)
             {
@@ -151,6 +155,10 @@ public class MiniGameManager : MonoBehaviour
                 // hide interaction prompt
                 interaction.HideInteractionPrompt();
             }
+
+            // Enable pause manager
+            if (PauseManager.Instance != null)
+                PauseManager.Instance.enabled = true;
         }
     }
 

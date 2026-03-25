@@ -4733,6 +4733,8 @@ MonoBehaviour:
   running: {fileID: 8300000, guid: 0e20bcd7e6c1d4a99854b218fe976c69, type: 3}
   jumping: {fileID: 8300000, guid: a7bc5af91d90941b1869ddb180f048fb, type: 3}
   interact: {fileID: 8300000, guid: 6439362e0a7f04d89b4a0fb44eddeab7, type: 3}
+  whackamoleBackground: {fileID: 8300000, guid: b7da48c15e710a741842583fac3307c7, type: 3}
+  whackamoleHit: {fileID: 0}
 --- !u!64 &173518822
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -49220,7 +49222,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

@@ -37,6 +37,10 @@ public class Mole : MonoBehaviour
   private int lives;
   private int moleIndex = 0;
 
+  // Hit SFX
+  [Header("Audio")]
+  [SerializeField] private AudioSource hitSource;
+
   private IEnumerator ShowHide(Vector2 start, Vector2 end)
   {
     // Make sure we start at the start.
@@ -111,6 +115,7 @@ public class Mole : MonoBehaviour
   {
     if (hittable)
     {
+      hitSource.Play();
       switch (moleType)
       {
         case MoleType.Standard:

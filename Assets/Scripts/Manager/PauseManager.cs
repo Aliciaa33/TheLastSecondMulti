@@ -9,6 +9,8 @@ using System.Collections;
 /// </summary>
 public class PauseManager : MonoBehaviour
 {
+    public static PauseManager Instance { get; private set; }
+
     [Header("Scene Names")]
     [SerializeField] private string mainMenuSceneName = "Menu";
 
@@ -61,6 +63,10 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
+        // Don't allow pausing during mini game
+        if (MiniGameManager.Instance != null && MiniGameManager.Instance.IsInMiniGame())
+            return;
+
         if (isQuitting) return;
 
         if (playerInputs == null)

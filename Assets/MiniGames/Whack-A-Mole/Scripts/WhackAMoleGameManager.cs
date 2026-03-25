@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 public class WhackAMoleGameManager : MonoBehaviour
 {
@@ -32,13 +33,13 @@ public class WhackAMoleGameManager : MonoBehaviour
   // Hardcoded variables you may want to tune.
   private float startingTime = 2f;
   private int goal = 5;
-  public bool win = false;
 
   // Global variables
   private float timeRemaining;
   private HashSet<Mole> currentMoles = new HashSet<Mole>();
   private int score;
   private bool playing = false;
+  private bool win = false;
 
   void Awake()
   {
@@ -193,4 +194,6 @@ public class WhackAMoleGameManager : MonoBehaviour
     // Remove from active moles.
     currentMoles.Remove(moles[moleIndex]);
   }
+
+  public bool IsWin() => win;
 }
