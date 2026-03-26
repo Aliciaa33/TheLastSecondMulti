@@ -29,7 +29,6 @@ public class WhackAMoleGameManager : MonoBehaviour
   [SerializeField] public GameObject winIcon;
   [SerializeField] public GameObject loseIcon;
 
-
   // Hardcoded variables you may want to tune.
   private float startingTime = 3f;
   private int goal = 50;
@@ -89,6 +88,9 @@ public class WhackAMoleGameManager : MonoBehaviour
 
   public void GameOver()
   {
+    // set back to default cursor when game over
+    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+
     gameOverPanel.SetActive(true);
     if (score >= goal)
     {

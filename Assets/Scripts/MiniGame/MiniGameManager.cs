@@ -51,6 +51,8 @@ public class MiniGameManager : MonoBehaviour
 
         _inMiniGame = false;
         _pendingPotionReward = wonGame;
+        // set back to default cursor when game over
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 
         // Unload mini game scene — Game scene stays untouched
         StartCoroutine(UnloadMiniGame());
@@ -85,9 +87,9 @@ public class MiniGameManager : MonoBehaviour
         // Freeze the 3D game world
         Time.timeScale = 0f;
 
-        // Unlock cursor for mini game
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        // Confine cursor to game window AND make it visible
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;  
 
         // Pause Photon to prevent network events during mini game
         PhotonNetwork.IsMessageQueueRunning = false;
