@@ -626,8 +626,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: A Potion added to Inventory!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d6dbeae3582f24ecf8bb6c701db297d7, type: 2}
+  m_sharedMaterial: {fileID: 3686819386764015028, guid: d6dbeae3582f24ecf8bb6c701db297d7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2488,8 +2488,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Score: 50 / 50'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d6dbeae3582f24ecf8bb6c701db297d7, type: 2}
+  m_sharedMaterial: {fileID: 3686819386764015028, guid: d6dbeae3582f24ecf8bb6c701db297d7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4055,8 +4055,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Try Again!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d6dbeae3582f24ecf8bb6c701db297d7, type: 2}
+  m_sharedMaterial: {fileID: 3686819386764015028, guid: d6dbeae3582f24ecf8bb6c701db297d7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

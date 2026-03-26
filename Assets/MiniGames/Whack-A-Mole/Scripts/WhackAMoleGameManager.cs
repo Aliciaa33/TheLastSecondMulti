@@ -31,8 +31,8 @@ public class WhackAMoleGameManager : MonoBehaviour
 
 
   // Hardcoded variables you may want to tune.
-  private float startingTime = 2f;
-  private int goal = 5;
+  private float startingTime = 3f;
+  private int goal = 50;
 
   // Global variables
   private float timeRemaining;
