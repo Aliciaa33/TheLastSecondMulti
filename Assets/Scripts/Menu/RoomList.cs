@@ -35,6 +35,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         // Set the player name in Photon
         PhotonNetwork.LocalPlayer.NickName = playerName;
         ConnectToServer.Instance.SetPlayerName(playerName);
+        ConnectToServer.Instance.SetIsRoomCreator(true);
 
         Debug.Log($"Creating room as: {playerName}");
 
@@ -85,7 +86,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         foreach (RoomInfo room in cachedRoomList.Values)
         {
             // Skip rooms that are full or closed
-            if (room.RemovedFromList || room.PlayerCount >= room.MaxPlayers)
+            if (room.RemovedFromList || room.PlayerCount >= room.MaxPlayers || room.IsOpen == false)
             {
                 continue;
             }
