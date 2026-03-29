@@ -12,10 +12,14 @@ public class WhackAMoleCursor : MonoBehaviour
 
     void Start()
     {
-        SetNormalCursor();
+        SetHammerCursor();
+
+        // Register with MiniGameManager so it can reapply every frame
+        if (MiniGameManager.Instance != null)
+            MiniGameManager.Instance.RegisterCursor(hammer, hotspot);
     }
 
-    void SetNormalCursor()
+    public void SetHammerCursor()
     {
         if (hammer != null)
             Cursor.SetCursor(hammer, hotspot, CursorMode.Auto);
@@ -23,19 +27,11 @@ public class WhackAMoleCursor : MonoBehaviour
 
     void OnDestroy()
     {
+        // Unregister cursor when scene unloads
+        if (MiniGameManager.Instance != null)
+            MiniGameManager.Instance.RegisterCursor(null, Vector2.zero);
+            
         // Reset to default cursor when leaving mini game
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
-
-    void OnApplicationFocus(bool hasFocus)
-{
-    if (hasFocus)
-    {
-        // Reapply hammer cursor when window regains focus
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;
-        if (hammer != null)
-            Cursor.SetCursor(hammer, hotspot, CursorMode.Auto);
-    }
-}
 }

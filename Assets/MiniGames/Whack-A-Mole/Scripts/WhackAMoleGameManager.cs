@@ -88,8 +88,14 @@ public class WhackAMoleGameManager : MonoBehaviour
 
   public void GameOver()
   {
+    // Stop hammer cursor override so normal cursor shows on game over panel
+    if (MiniGameManager.Instance != null)
+        MiniGameManager.Instance.StopCursorOverride();
+    else
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+
     // set back to default cursor when game over
-    Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    // Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 
     gameOverPanel.SetActive(true);
     if (score >= goal)

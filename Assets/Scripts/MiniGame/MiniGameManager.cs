@@ -15,6 +15,11 @@ public class MiniGameManager : MonoBehaviour
     private bool _pendingPotionReward = false;
     private string _currentMiniGameScene;
 
+    // Cursor Settings
+    private Texture2D _miniGameCursorTexture;
+    private Vector2 _miniGameCursorHotspot;
+    private bool _pauseCursorOverride = false;
+
     void Awake()
     {
         if (Instance == null)
@@ -27,6 +32,22 @@ public class MiniGameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    void Update()
+    {
+        // Continuously reapply hammer cursor while in mini game
+        // This ensures it never gets overridden even after leaving window
+        if (_inMiniGame && _miniGameCursorTexture != null && !_pauseCursorOverride)
+        {
+            Cursor.SetCursor(_miniGameCursorTexture, _miniGameCursorHotspot, CursorMode.Auto);
+        }
+    }
+
+    public void StopCursorOverride()
+    {
+        _pauseCursorOverride = true;
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 
     public void EnterMiniGame(string miniGameScene)
@@ -51,6 +72,7 @@ public class MiniGameManager : MonoBehaviour
 
         _inMiniGame = false;
         _pendingPotionReward = wonGame;
+        _pauseCursorOverride = false;
         // set back to default cursor when game over
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 
@@ -162,6 +184,12 @@ public class MiniGameManager : MonoBehaviour
             if (PauseManager.Instance != null)
                 PauseManager.Instance.enabled = true;
         }
+    }
+
+    public void RegisterCursor(Texture2D texture, Vector2 hotspot)
+    {
+        _miniGameCursorTexture = texture;
+        _miniGameCursorHotspot = hotspot;
     }
 
     public bool IsInMiniGame() => _inMiniGame;
