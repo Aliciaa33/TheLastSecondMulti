@@ -148,6 +148,23 @@ public class PauseManager : MonoBehaviour
         if (ConnectToServer.Instance != null)
             ConnectToServer.Instance.StopWatchingConnection();
 
+        if (Photon.Pun.PhotonNetwork.InRoom)
+        {
+            // Find and destroy our own player object
+            foreach (Photon.Pun.PhotonView pv in FindObjectsOfType<Photon.Pun.PhotonView>())
+            {
+                if (pv.IsMine && pv.gameObject.CompareTag("Player"))
+                {
+                    Debug.Log("[PauseManager] Destroying local player before leaving");
+                    Photon.Pun.PhotonNetwork.Destroy(pv.gameObject);
+                    break;
+                }
+            }
+
+            // Give one frame for destroy RPC to send
+            yield return null;
+        }
+
         // ── Step 1: Leave the current room if we are in one ───────────────
         if (Photon.Pun.PhotonNetwork.InRoom)
         {
