@@ -95,12 +95,21 @@ public class CreateRoom : MonoBehaviourPunCallbacks
         else
             ConnectToServer.Instance.SetGameMode(GameMode.Multiplayer);
 
+        // Close the room — no new players can join, and room won't appear in lobby
+        PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable());
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+
         PhotonNetwork.LoadLevel("Game");
     }
 
     private void RefreshPlayerList()
     {
         if (PhotonNetwork.CurrentRoom == null) return;
+
+        GameObject startBtn = GameObject.Find("Start");
+        if (!ConnectToServer.Instance.IsRoomCreator() && startBtn != null)
+            startBtn.SetActive(false);
 
         if (roomInfoText != null)
         {

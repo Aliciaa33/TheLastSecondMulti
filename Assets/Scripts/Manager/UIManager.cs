@@ -164,6 +164,20 @@ public class UIManager : MonoBehaviour
         if (ConnectToServer.Instance != null)
             ConnectToServer.Instance.StopWatchingConnection();
 
+        // Destroy local player before leaving
+        if (PhotonNetwork.InRoom)
+        {
+            foreach (Photon.Pun.PhotonView pv in FindObjectsOfType<Photon.Pun.PhotonView>())
+            {
+                if (pv.IsMine && pv.gameObject.CompareTag("Player"))
+                {
+                    PhotonNetwork.Destroy(pv.gameObject);
+                    break;
+                }
+            }
+            yield return null; // one frame for RPC to send
+        }
+
         // Leave the current room if we are in one
         if (PhotonNetwork.InRoom)
         {
