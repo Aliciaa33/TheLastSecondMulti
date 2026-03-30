@@ -18,7 +18,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private KeyCode pauseKey = KeyCode.P;
     [SerializeField] private bool escapeAlsoPauses = true;
 
-    private GameObject pauseCanvas;
+    [SerializeField] private GameObject pauseCanvas;
     private GameObject settingsSection;
     private Slider musicSlider;
     private Slider sfxSlider;
@@ -34,7 +34,7 @@ public class PauseManager : MonoBehaviour
 
     void Awake()
     {
-        pauseCanvas = GameObject.Find("PauseCanvas");
+        // pauseCanvas = GameObject.Find("PauseCanvas");
         settingsSection = GameObject.Find("SettingsSection");
         musicSlider = GameObject.Find("MusicSlider")?.GetComponent<Slider>();
         sfxSlider = GameObject.Find("SFXSlider")?.GetComponent<Slider>();
@@ -42,10 +42,10 @@ public class PauseManager : MonoBehaviour
         if (pauseCanvas == null)
             Debug.LogWarning("[PauseManager] 'PauseCanvas' not found.");
 
-        WireButton("ResumeButton", Resume);
-        WireButton("RestartButton", Restart);
-        WireButton("SettingsButton", ToggleSettings);
-        WireButton("QuitButton", QuitToMenu);
+        // WireButton("ResumeButton", Resume);
+        // WireButton("RestartButton", Restart);
+        // WireButton("SettingsButton", ToggleSettings);
+        // WireButton("QuitButton", QuitToMenu);
 
         if (musicSlider != null)
         {
@@ -238,11 +238,11 @@ public class PauseManager : MonoBehaviour
         if (pauseCanvas != null) pauseCanvas.SetActive(visible);
     }
 
-    void WireButton(string goName, UnityEngine.Events.UnityAction action)
-    {
-        GameObject go = GameObject.Find(goName);
-        if (go == null) { Debug.LogWarning($"[PauseManager] Button '{goName}' not found."); return; }
-        Button btn = go.GetComponent<Button>();
-        if (btn != null) btn.onClick.AddListener(action);
-    }
+    // void WireButton(string goName, UnityEngine.Events.UnityAction action)
+    // {
+    //     GameObject go = GameObject.Find(goName);
+    //     if (go == null) { Debug.LogWarning($"[PauseManager] Button '{goName}' not found."); return; }
+    //     Button btn = go.GetComponent<Button>();
+    //     if (btn != null) btn.onClick.AddListener(action);
+    // }
 }

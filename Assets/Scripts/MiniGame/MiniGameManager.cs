@@ -98,7 +98,7 @@ public class MiniGameManager : MonoBehaviour
                 InventoryManager.Instance.AddPotion();
 
             if (UIManager.Instance != null)
-                UIManager.Instance.ShowToast("🎉 Mini Game Won! You received a Potion!");
+                UIManager.Instance.ShowToast("Mini Game Won! You received a Potion!", 1);
         }
 
         Debug.Log("Mini game unloaded, game resumed");
@@ -111,7 +111,7 @@ public class MiniGameManager : MonoBehaviour
 
         // Confine cursor to game window AND make it visible
         Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = true;  
+        Cursor.visible = true;
 
         // Pause Photon to prevent network events during mini game
         PhotonNetwork.IsMessageQueueRunning = false;
