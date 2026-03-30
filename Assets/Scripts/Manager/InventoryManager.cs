@@ -48,7 +48,7 @@ public class InventoryManager : MonoBehaviourPunCallbacks
         });
 
         if (UIManager.Instance != null)
-            UIManager.Instance.ShowToast($"Hint collected: {number}");
+            UIManager.Instance.ShowToast($"Hint collected: {number}", 0);
 
         if (InventoryUI.Instance != null)
             InventoryUI.Instance.RefreshIfOpen();
@@ -74,7 +74,7 @@ public class InventoryManager : MonoBehaviourPunCallbacks
     {
         potionCount++;
         if (UIManager.Instance != null)
-            UIManager.Instance.ShowToast("Potion collected! Open inventory to use.");
+            UIManager.Instance.ShowToast("Potion collected! Open inventory to use.", 1);
         if (InventoryUI.Instance != null)
             InventoryUI.Instance.RefreshIfOpen();
     }
@@ -85,7 +85,7 @@ public class InventoryManager : MonoBehaviourPunCallbacks
         if (potionCount <= 0)
         {
             if (UIManager.Instance != null)
-                UIManager.Instance.ShowToast("No potions left!");
+                UIManager.Instance.ShowToast("No potions left!", 4);
             return;
         }
 
@@ -107,7 +107,7 @@ public class InventoryManager : MonoBehaviourPunCallbacks
         GameManager.Instance?.Restore();
 
         if (UIManager.Instance != null)
-            UIManager.Instance.ShowToast("Potion used! HP restored.");
+            UIManager.Instance.ShowToast("Potion used! HP restored.", 3);
 
         if (InventoryUI.Instance != null)
             InventoryUI.Instance.RefreshIfOpen();

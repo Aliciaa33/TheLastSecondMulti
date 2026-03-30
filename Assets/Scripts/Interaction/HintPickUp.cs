@@ -29,7 +29,6 @@ public class HintPickUp : InteractableBase
     {
         // Add to local inventory immediately
         InventoryManager.Instance?.AddHint(number, hint);
-        UIManager.Instance?.ShowToast("Collected Number: " + number);
         // Play sound effect for local player
         audioManager.PlaySFX(audioManager.interact);
 

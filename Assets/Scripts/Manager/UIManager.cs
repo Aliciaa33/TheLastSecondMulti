@@ -12,14 +12,19 @@ public class UIManager : MonoBehaviour
     [Header("HP UI")]
     public TextMeshProUGUI hpText;
     public Slider hpSlider;
-    public Image[] hpHearts; // Alternative heart-based display
+    // public Image[] hpHearts; // Alternative heart-based display
 
     [Header("Defused Bombs UI")]
     public TextMeshProUGUI defusedBombsText;
 
     [Header("Toast Notifications")]
-    public GameObject toastPanel;
-    public Text toastText;
+    public GameObject collectionToastPanel;
+    public TextMeshProUGUI collectionToastText;
+    public Image collectionImage;
+    public Sprite[] collectionSprites;
+    public GameObject msgToastPanel;
+    public TextMeshProUGUI msgToastTitle;
+    public TextMeshProUGUI msgToastText;
     public float toastDuration = 3f;
 
     [Header("Game Over UI")]
@@ -40,9 +45,6 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        if (toastPanel != null)
-            toastPanel.SetActive(false);
-
         if (gameOverCanvas != null)
             gameOverCanvas.SetActive(false);
 
@@ -75,22 +77,46 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowToast(string message)
+    // type: 0 = hint, 1 = potion, 2 = bomb, 3 = good msg, 4 = bad msg
+    public void ShowToast(string message, int type)
     {
-        if (toastPanel != null && toastText != null)
+        if (type == 3 && msgToastPanel != null && msgToastTitle != null && msgToastText != null)
         {
-            toastText.text = message;
-            toastPanel.SetActive(true);
+            msgToastTitle.text = "Congratulations!";
+            msgToastText.text = message;
+            msgToastPanel.SetActive(true);
             StopAllCoroutines();
-            StartCoroutine(HideToastAfterDelay());
+            StartCoroutine(HideToastAfterDelay(1));
+        }
+        else if (type == 4 && msgToastPanel != null && msgToastTitle != null && msgToastText != null)
+        {
+            msgToastTitle.text = "Oops!";
+            msgToastText.text = message;
+            msgToastPanel.SetActive(true);
+            StopAllCoroutines();
+            StartCoroutine(HideToastAfterDelay(1));
+        }
+        else
+        {
+            if (collectionToastPanel != null && collectionToastText != null)
+            {
+                collectionToastText.text = message;
+                collectionImage.sprite = collectionSprites[type];
+                collectionToastPanel.SetActive(true);
+                StopAllCoroutines();
+                StartCoroutine(HideToastAfterDelay(0));
+            }
         }
     }
 
-    IEnumerator HideToastAfterDelay()
+    // type: 0 = collection panel, 1 = message panel
+    IEnumerator HideToastAfterDelay(int type)
     {
         yield return new WaitForSeconds(toastDuration);
-        if (toastPanel != null)
-            toastPanel.SetActive(false);
+        if (type == 0)
+            collectionToastPanel.SetActive(false);
+        else
+            msgToastPanel.SetActive(false);
     }
 
     public void ShowGameOver(bool win)

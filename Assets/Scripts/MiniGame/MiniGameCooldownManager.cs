@@ -6,7 +6,7 @@ public class MiniGameCooldownManager : MonoBehaviour
     public static MiniGameCooldownManager Instance { get; private set; }
 
     [Header("Cooldown Settings")]
-    public float cooldownDuration = 120f;
+    public float cooldownDuration = 5f;
 
     private float _cooldownRemaining = 0f;
     private bool _onCooldown = false;
@@ -30,7 +30,7 @@ public class MiniGameCooldownManager : MonoBehaviour
             _onCooldown = false;
 
             if (UIManager.Instance != null)
-                UIManager.Instance.ShowToast("Whack-A-Mole is available again!");
+                UIManager.Instance.ShowToast("Whack-A-Mole is available again!", 3);
         }
     }
 

@@ -24,7 +24,7 @@ public class MiniGameTrigger : MonoBehaviour, IInteractable
         {
             float remaining = MiniGameCooldownManager.Instance.GetRemainingCooldown();
             UIManager.Instance?.ShowToast(
-                $"Please wait {Mathf.CeilToInt(remaining)}s before playing again!");
+                $"Please wait {Mathf.CeilToInt(remaining)}s before playing again!", 4);
             return;
         }
 
