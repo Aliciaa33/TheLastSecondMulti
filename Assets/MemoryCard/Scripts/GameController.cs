@@ -211,15 +211,26 @@ public class GameController : MonoBehaviour
 
         if (countCorrectGuesses == gameGuesses)
         {
-            // ★ 标记游戏结束，停止倒计时
             gameOver = true;
             Debug.Log("Game Complete!");
 
+            // ★★★ 奖励一瓶 Potion 到背包（不是直接加 HP）★★★
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.AddPotion();
+                Debug.Log("奖励 Potion 已加入背包");
+            }
+            else
+            {
+                Debug.LogWarning("InventoryManager.Instance is null, 无法奖励 Potion");
+            }
+
             if (winPanel != null)
+            {
                 winPanel.SetActive(true);
+            }
         }
     }
-
     // ★ OK 按钮调用（WinPanel 和 LosePanel 的 OK 按钮都绑定这个）
     public void OnOKButtonClicked()
     {

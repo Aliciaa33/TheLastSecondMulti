@@ -1877,7 +1877,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Congratulations !
+  m_text: 'Congratulations !
+
+    You get one potion !'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4d6b341cb2ed94e289974bfc8ab9d883, type: 2}
   m_sharedMaterial: {fileID: 7010944128580326195, guid: 4d6b341cb2ed94e289974bfc8ab9d883, type: 2}
