@@ -57,6 +57,9 @@ MonoBehaviour:
   - RPC_UsePotion
   - RPC_StartCooldown
   - RPC_StartMiniGameCooldown
+  - RPC_HideChat_LocalOnly
+  - RPC_ReceiveTransform
+  - RPC_ShowChat_LocalOnly
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
