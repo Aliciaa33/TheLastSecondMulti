@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Wanna play the game? \nGive me some gold coins!"
+  m_text: "Wanna play the game? \nPress E!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5eb0cc2289fab14284326eeb574c079, type: 2}
   m_sharedMaterial: {fileID: -6753723746149418804, guid: b5eb0cc2289fab14284326eeb574c079, type: 2}
@@ -403,7 +403,7 @@ MonoBehaviour:
   sendRate: 10
   interactRadius: 3
   requiredStaySeconds: 1
-  chatMessage: want to play a game? give me some gold coins!
+  chatMessage: want to play a game? Press E!
   charDelay: 0.04
   scanInterval: 0.2
   chatBubble: {fileID: 1684677088639051048}
