@@ -115,7 +115,7 @@ public class PlayerInteraction : MonoBehaviourPun
         }
     }
 
-    void HideInteractionPrompt()
+    public void HideInteractionPrompt()
     {
         currentInteractable = null;
         if (interactionPrompt != null)

@@ -441,7 +441,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             if (UIManager.Instance != null)
             {
-                UIManager.Instance.ShowToast("Bomb exploded! Starting new round...");
+                UIManager.Instance.ShowToast("Bomb exploded! Starting new round...", 4);
             }
             Invoke("StartNewRound", 3f);
         }
@@ -512,7 +512,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log($"defused bomb number: {defusedBombs}/{goal}");
 
             if (UIManager.Instance != null)
+            {
                 UIManager.Instance.UpdateDefusedBombs();
+                UIManager.Instance.ShowToast("Bomb defused! Round won!", 2);
+            }
 
             if (defusedBombs >= goal)
                 GameOver(true);
@@ -533,10 +536,20 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log($"Synced defused bomb count: {defusedBombs}/{goal}");
 
         if (UIManager.Instance != null)
+        {
             UIManager.Instance.UpdateDefusedBombs();
+            UIManager.Instance.ShowToast("Bomb defused! Round won!", 2);
+        }
 
         if (defusedBombs >= goal)
             GameOver(true);
+    }
+
+    // This RPC is called by MiniGameCooldownManager.StartCooldown() to trigger the cooldown on all clients.
+    [PunRPC]
+    public void RPC_StartMiniGameCooldown(float duration)
+    {
+        MiniGameCooldownManager.Instance?.ApplyCooldown(duration);
     }
 
     void GameOver(bool win)

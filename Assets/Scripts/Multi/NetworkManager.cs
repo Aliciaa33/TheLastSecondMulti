@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
+using System.Collections.Generic;
 using Cinemachine;
 
 public class NetworkGameManager : MonoBehaviourPunCallbacks
@@ -73,7 +74,47 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         Debug.Log($"{otherPlayer.NickName} left the game");
-        // Optional: notify UIManager
+
+        if (UIManager.Instance != null)
+            UIManager.Instance.ShowToast($"{otherPlayer.NickName} left");
+
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        // Cache objects NOW while Owner is still valid
+        List<GameObject> toDestroy = new List<GameObject>();
+        foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
+        {
+            if (pv.Owner != null &&
+                pv.Owner.ActorNumber == otherPlayer.ActorNumber)
+            {
+                toDestroy.Add(pv.gameObject);
+                Debug.Log($"Queued for destroy: {pv.gameObject.name}");
+            }
+        }
+
+        // Destroy immediately — no delay needed
+        foreach (GameObject go in toDestroy)
+        {
+            if (go != null)
+                PhotonNetwork.Destroy(go);
+        }
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log($"MasterClient switched to {newMasterClient.NickName}");
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
+            {
+                if (pv.gameObject.CompareTag("Hint") ||
+                    pv.gameObject.CompareTag("Potion"))
+                {
+                    pv.TransferOwnership(newMasterClient);
+                }
+            }
+        }
     }
 
     IEnumerator WaitForRoomThenSpawn()

@@ -9,6 +9,8 @@ using System.Collections;
 /// </summary>
 public class PauseManager : MonoBehaviour
 {
+    public static PauseManager Instance { get; private set; }
+
     [Header("Scene Names")]
     [SerializeField] private string mainMenuSceneName = "Menu";
 
@@ -16,7 +18,7 @@ public class PauseManager : MonoBehaviour
     [SerializeField] private KeyCode pauseKey = KeyCode.P;
     [SerializeField] private bool escapeAlsoPauses = true;
 
-    private GameObject pauseCanvas;
+    [SerializeField] private GameObject pauseCanvas;
     private GameObject settingsSection;
     private Slider musicSlider;
     private Slider sfxSlider;
@@ -32,7 +34,7 @@ public class PauseManager : MonoBehaviour
 
     void Awake()
     {
-        pauseCanvas = GameObject.Find("PauseCanvas");
+        // pauseCanvas = GameObject.Find("PauseCanvas");
         settingsSection = GameObject.Find("SettingsSection");
         musicSlider = GameObject.Find("MusicSlider")?.GetComponent<Slider>();
         sfxSlider = GameObject.Find("SFXSlider")?.GetComponent<Slider>();
@@ -40,10 +42,10 @@ public class PauseManager : MonoBehaviour
         if (pauseCanvas == null)
             Debug.LogWarning("[PauseManager] 'PauseCanvas' not found.");
 
-        WireButton("ResumeButton", Resume);
-        WireButton("RestartButton", Restart);
-        WireButton("SettingsButton", ToggleSettings);
-        WireButton("QuitButton", QuitToMenu);
+        // WireButton("ResumeButton", Resume);
+        // WireButton("RestartButton", Restart);
+        // WireButton("SettingsButton", ToggleSettings);
+        // WireButton("QuitButton", QuitToMenu);
 
         if (musicSlider != null)
         {
@@ -61,6 +63,10 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
+        // Don't allow pausing during mini game
+        if (MiniGameManager.Instance != null && MiniGameManager.Instance.IsInMiniGame())
+            return;
+
         if (isQuitting) return;
 
         if (playerInputs == null)
@@ -142,6 +148,23 @@ public class PauseManager : MonoBehaviour
         if (ConnectToServer.Instance != null)
             ConnectToServer.Instance.StopWatchingConnection();
 
+        if (Photon.Pun.PhotonNetwork.InRoom)
+        {
+            // Find and destroy our own player object
+            foreach (Photon.Pun.PhotonView pv in FindObjectsOfType<Photon.Pun.PhotonView>())
+            {
+                if (pv.IsMine && pv.gameObject.CompareTag("Player"))
+                {
+                    Debug.Log("[PauseManager] Destroying local player before leaving");
+                    Photon.Pun.PhotonNetwork.Destroy(pv.gameObject);
+                    break;
+                }
+            }
+
+            // Give one frame for destroy RPC to send
+            yield return null;
+        }
+
         // ── Step 1: Leave the current room if we are in one ───────────────
         if (Photon.Pun.PhotonNetwork.InRoom)
         {
@@ -215,11 +238,11 @@ public class PauseManager : MonoBehaviour
         if (pauseCanvas != null) pauseCanvas.SetActive(visible);
     }
 
-    void WireButton(string goName, UnityEngine.Events.UnityAction action)
-    {
-        GameObject go = GameObject.Find(goName);
-        if (go == null) { Debug.LogWarning($"[PauseManager] Button '{goName}' not found."); return; }
-        Button btn = go.GetComponent<Button>();
-        if (btn != null) btn.onClick.AddListener(action);
-    }
+    // void WireButton(string goName, UnityEngine.Events.UnityAction action)
+    // {
+    //     GameObject go = GameObject.Find(goName);
+    //     if (go == null) { Debug.LogWarning($"[PauseManager] Button '{goName}' not found."); return; }
+    //     Button btn = go.GetComponent<Button>();
+    //     if (btn != null) btn.onClick.AddListener(action);
+    // }
 }
