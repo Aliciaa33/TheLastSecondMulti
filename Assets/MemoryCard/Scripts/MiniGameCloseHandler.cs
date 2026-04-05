@@ -16,7 +16,7 @@ public class MiniGameCloseHandler : MonoBehaviour
 
     private void Close()
     {
-        if (MiniGameManager.Instance != null)
-            MiniGameManager.Instance.CloseMiniGame();
+        if (MemMiniGameManager.Instance != null)
+            MemMiniGameManager.Instance.CloseMiniGame();
     }
 }

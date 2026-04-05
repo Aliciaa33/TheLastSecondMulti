@@ -234,10 +234,10 @@ public class GameController : MonoBehaviour
     // ★ OK 按钮调用（WinPanel 和 LosePanel 的 OK 按钮都绑定这个）
     public void OnOKButtonClicked()
     {
-        if (MiniGameManager.Instance != null)
-            MiniGameManager.Instance.CloseMiniGame();
+        if (MemMiniGameManager.Instance != null)
+            MemMiniGameManager.Instance.CloseMiniGame();
         else
-            Debug.LogError("MiniGameManager.Instance is null!");
+            Debug.LogError("MemMiniGameManager.Instance is null!");
     }
 }
 

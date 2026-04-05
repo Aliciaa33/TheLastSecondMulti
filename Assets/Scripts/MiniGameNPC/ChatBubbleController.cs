@@ -44,10 +44,10 @@ public class ChatBubbleController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (MiniGameManager.Instance != null &&
-                !MiniGameManager.Instance.IsMiniGameActive())
+            if (MemMiniGameManager.Instance != null &&
+                !MemMiniGameManager.Instance.IsMiniGameActive())
             {
-                MiniGameManager.Instance.OpenMiniGame();
+                MemMiniGameManager.Instance.OpenMiniGame();
             }
         }
     }

@@ -2,9 +2,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MiniGameManager : MonoBehaviour
+public class MemMiniGameManager : MonoBehaviour
 {
-    public static MiniGameManager Instance { get; private set; }
+    public static MemMiniGameManager Instance { get; private set; }
     public string miniGameSceneName = "lvl_03";
     private bool isMiniGameActive = false;
 
