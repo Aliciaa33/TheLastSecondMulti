@@ -13,7 +13,7 @@ public class MiniGameTrigger : MonoBehaviour, IInteractable
             float remaining = MiniGameCooldownManager.Instance.GetRemainingCooldown();
             return $"Available in {Mathf.CeilToInt(remaining)}s";
         }
-        return $"Play Whack-A-Mole";
+        return $"Press F\nplay Whack A Mole";
     }
 
     public void Interact()

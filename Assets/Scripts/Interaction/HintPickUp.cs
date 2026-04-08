@@ -10,7 +10,7 @@ public class HintPickUp : InteractableBase
 
     void Start()
     {
-        interactionText = "Press F to pick up hint";
+        interactionText = "Press F\npick up hint";
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
 
         PhotonView pv = GetComponent<PhotonView>();

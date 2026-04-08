@@ -280,7 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerListText: {fileID: 1061124511}
   roomInfoText: {fileID: 1933163105}
-  startButton: {fileID: 0}
+  startButton: {fileID: 713844342}
   maxPlayersPerRoom: 4
 --- !u!1 &620682147
 GameObject:

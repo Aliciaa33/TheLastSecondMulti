@@ -11,7 +11,7 @@ public class PotionPickUp : InteractableBase
 
     void Start()
     {
-        interactionText = "Press F to pick up potion";
+        interactionText = "Press F\npick up potion";
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
