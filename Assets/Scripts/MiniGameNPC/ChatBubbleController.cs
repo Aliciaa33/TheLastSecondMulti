@@ -124,6 +124,16 @@ public class ChatBubbleController : MonoBehaviour
         isShowing = false;
         gameObject.SetActive(false);
     }
+
+    // ★ 新增：直接设置文字（无打字机效果，用于倒计时实时更新）
+    public void SetDirectText(string text)
+    {
+        if (typeRoutine != null) { StopCoroutine(typeRoutine); typeRoutine = null; }
+        gameObject.SetActive(true);
+        if (canvasGroup != null) canvasGroup.alpha = 1f;
+        if (messageText != null) messageText.text = text;
+    }
+
 }
 
 
