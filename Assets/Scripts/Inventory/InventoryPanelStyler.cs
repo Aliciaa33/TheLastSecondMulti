@@ -78,10 +78,10 @@ public class InventoryPanelStyler : MonoBehaviour
             TMP_Text t = titleGO.GetComponent<TMP_Text>();
             if (t)
             {
-                t.text = "// INVENTORY //";
+                t.text = "INVENTORY";
                 t.color = Color.white;
                 t.fontStyle = FontStyles.Bold;
-                t.fontSize = 22;
+                t.fontSize = 32;
                 t.characterSpacing = 3f;
                 t.outlineWidth = 0.1f;
                 t.outlineColor = NeonBlue;
@@ -119,7 +119,7 @@ public class InventoryPanelStyler : MonoBehaviour
         outline.effectDistance = new Vector2(1, -1);
 
         TMP_Text label = go.GetComponentInChildren<TMP_Text>();
-        if (label) { label.color = NeonBlue; label.fontStyle = FontStyles.Bold; label.fontSize = 16; }
+        if (label) { label.color = NeonBlue; label.fontStyle = FontStyles.Bold; label.fontSize = 24; }
     }
 
     void StyleGrid()
@@ -177,7 +177,7 @@ public class InventoryPanelStyler : MonoBehaviour
             {
                 t.color = new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.75f);
                 t.fontStyle = FontStyles.Normal;
-                t.fontSize = 18;
+                t.fontSize = 20;
                 t.alignment = TextAlignmentOptions.Center;
             }
         }
@@ -193,7 +193,7 @@ public class InventoryPanelStyler : MonoBehaviour
             if (t)
             {
                 t.color = new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.5f);
-                t.fontSize = 13;
+                t.fontSize = 20;
                 t.characterSpacing = 2f;
             }
         }

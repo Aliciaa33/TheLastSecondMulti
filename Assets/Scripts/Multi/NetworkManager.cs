@@ -76,7 +76,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         Debug.Log($"{otherPlayer.NickName} left the game");
 
         if (UIManager.Instance != null)
-            UIManager.Instance.ShowToast($"{otherPlayer.NickName} left");
+            UIManager.Instance.ShowToast($"{otherPlayer.NickName} left", 4);
 
         if (!PhotonNetwork.IsMasterClient) return;
 

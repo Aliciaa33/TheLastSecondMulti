@@ -107,10 +107,6 @@ public class CreateRoom : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.CurrentRoom == null) return;
 
-        GameObject startBtn = GameObject.Find("Start");
-        if (!ConnectToServer.Instance.IsRoomCreator() && startBtn != null)
-            startBtn.SetActive(false);
-
         if (roomInfoText != null)
         {
             roomInfoText.text = $"Room No.: {PhotonNetwork.CurrentRoom.Name}     " +
