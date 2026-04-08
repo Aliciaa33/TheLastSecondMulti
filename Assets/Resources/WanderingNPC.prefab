@@ -403,9 +403,10 @@ MonoBehaviour:
   sendRate: 10
   interactRadius: 3
   requiredStaySeconds: 1
-  chatMessage: want to play a game? Press E!
+  chatMessage: Want to play a game? Press E to start!
   charDelay: 0.04
   scanInterval: 0.2
+  cooldownTextFormat: Available in {0} seconds
   chatBubble: {fileID: 1684677088639051048}
 --- !u!1 &8757353049563893612
 GameObject:

@@ -22,6 +22,293 @@ public class GameController : MonoBehaviour
     private int firstGuessIndex, secondGuessIndex;
     private string firstGuessPuzzle, secondGuessPuzzle;
 
+    // ★★★ 音效相关 ★★★
+    [Header("Audio")]
+    [SerializeField] private AudioSource correctAudioSource;  // 正确音效的 AudioSource
+    [SerializeField] private AudioSource wrongAudioSource;    // 错误音效的 AudioSource
+    // 或者直接拖 AudioClip（推荐）
+    [SerializeField] private AudioClip correctClip;
+    [SerializeField] private AudioClip wrongClip;
+    [SerializeField] private float soundVolume = 0.8f;
+
+    // ★★★ 原有变量 ★★★
+    [SerializeField] private GameObject winPanel;
+    [SerializeField] private GameObject losePanel;
+    [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private float timeLimit = 75f;
+
+    private float timeRemaining;
+    private bool gameOver = false;
+
+    void Start()
+    {
+        if (winPanel != null) winPanel.SetActive(false);
+        if (losePanel != null) losePanel.SetActive(false);
+
+        timeRemaining = timeLimit;
+        gameOver = false;
+
+        GetButtons();
+        AddListeners();
+        AddGamePuzzles();
+        Shuffle(gamePuzzles);
+        gameGuesses = gamePuzzles.Count / 2;
+
+        UpdateTimerDisplay();
+    }
+
+    void Update()
+    {
+        if (gameOver) return;
+
+        timeRemaining -= Time.deltaTime;
+
+        if (timeRemaining <= 0f)
+        {
+            timeRemaining = 0f;
+            UpdateTimerDisplay();
+            OnGameLose();
+            return;
+        }
+
+        UpdateTimerDisplay();
+    }
+
+    // ★★★ 新增：播放正确音效 ★★★
+    private void PlayCorrectSound()
+    {
+        if (correctAudioSource != null && correctClip == null)
+        {
+            correctAudioSource.Play();
+        }
+        else if (correctClip != null)
+        {
+            AudioSource.PlayClipAtPoint(correctClip, Camera.main.transform.position, soundVolume);
+        }
+        else
+        {
+            Debug.LogWarning("没有设置正确音效！");
+        }
+    }
+
+    // ★★★ 新增：播放错误音效 ★★★
+    private void PlayWrongSound()
+    {
+        if (wrongAudioSource != null && wrongClip == null)
+        {
+            wrongAudioSource.Play();
+        }
+        else if (wrongClip != null)
+        {
+            AudioSource.PlayClipAtPoint(wrongClip, Camera.main.transform.position, soundVolume);
+        }
+        else
+        {
+            Debug.LogWarning("没有设置错误音效！");
+        }
+    }
+
+    private void UpdateTimerDisplay()
+    {
+        if (timerText == null) return;
+
+        int seconds = Mathf.CeilToInt(timeRemaining);
+        timerText.text = seconds.ToString();
+
+        if (timeRemaining <= 10f)
+            timerText.color = Color.red;
+        else
+            timerText.color = Color.black;
+    }
+
+    private void OnGameLose()
+    {
+        gameOver = true;
+        Debug.Log("Time's up! Game Over!");
+
+        foreach (Button btn in btns)
+        {
+            btn.interactable = false;
+        }
+
+        if (losePanel != null)
+            losePanel.SetActive(true);
+    }
+
+    void GetButtons()
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag("PuzzleButton");
+        for (int i = 0; i < objects.Length; i++)
+        {
+            btns.Add(objects[i].GetComponent<Button>());
+            btns[i].image.sprite = bgImage;
+        }
+    }
+
+    void AddGamePuzzles()
+    {
+        int looper = btns.Count;
+        int index = 0;
+        for (int i = 0; i < looper; i++)
+        {
+            if (index == looper / 2)
+            {
+                index = 0;
+            }
+            gamePuzzles.Add(puzzles[index]);
+            index++;
+        }
+    }
+
+    void AddListeners()
+    {
+        foreach (Button btn in btns)
+        {
+            btn.onClick.AddListener(() => PickAPuzzle());
+        }
+    }
+
+    public void PickAPuzzle()
+    {
+        if (gameOver) return;
+
+        string name = UnityEngine.EventSystems.EventSystem.current
+                        .currentSelectedGameObject.name;
+
+        if (!firstGuess)
+        {
+            firstGuess = true;
+            firstGuessIndex = int.Parse(name);
+            firstGuessPuzzle = gamePuzzles[firstGuessIndex].name;
+            btns[firstGuessIndex].image.sprite = gamePuzzles[firstGuessIndex];
+        }
+        else if (!secondGuess)
+        {
+            secondGuess = true;
+            secondGuessIndex = int.Parse(name);
+            secondGuessPuzzle = gamePuzzles[secondGuessIndex].name;
+            btns[secondGuessIndex].image.sprite = gamePuzzles[secondGuessIndex];
+
+            if (firstGuessIndex == secondGuessIndex)
+            {
+                secondGuess = false;
+                return;
+            }
+
+            countGuesses++;
+            StartCoroutine(CheckIfThePuzzlesMatch());
+        }
+    }
+
+    IEnumerator CheckIfThePuzzlesMatch()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (gameOver) yield break;
+
+        if (firstGuessPuzzle == secondGuessPuzzle)
+        {
+            // ★★★ 匹配正确，播放正确音效 ★★★
+            PlayCorrectSound();
+
+            yield return new WaitForSeconds(.5f);
+
+            btns[firstGuessIndex].interactable = false;
+            btns[secondGuessIndex].interactable = false;
+
+            btns[firstGuessIndex].image.color = new Color(0, 0, 0, 0);
+            btns[secondGuessIndex].image.color = new Color(0, 0, 0, 0);
+
+            CheckIfTheGameIsFinished();
+        }
+        else
+        {
+            // ★★★ 匹配错误，播放错误音效 ★★★
+            PlayWrongSound();
+
+            yield return new WaitForSeconds(.5f);
+
+            btns[firstGuessIndex].image.sprite = bgImage;
+            btns[secondGuessIndex].image.sprite = bgImage;
+        }
+
+        yield return new WaitForSeconds(.5f);
+        firstGuess = secondGuess = false;
+    }
+
+    void Shuffle(List<Sprite> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            Sprite temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
+
+    void CheckIfTheGameIsFinished()
+    {
+        countCorrectGuesses++;
+
+        if (countCorrectGuesses == gameGuesses)
+        {
+            gameOver = true;
+            Debug.Log("Game Complete!");
+
+            if (InventoryManager.Instance != null)
+            {
+                InventoryManager.Instance.AddPotion();
+                Debug.Log("奖励 Potion 已加入背包");
+            }
+            else
+            {
+                Debug.LogWarning("InventoryManager.Instance is null, 无法奖励 Potion");
+            }
+
+            if (winPanel != null)
+            {
+                winPanel.SetActive(true);
+            }
+        }
+    }
+
+    public void OnOKButtonClicked()
+    {
+        if (MemMiniGameManager.Instance != null)
+            MemMiniGameManager.Instance.CloseMiniGame();
+        else
+            Debug.LogError("MemMiniGameManager.Instance is null!");
+    }
+}
+
+
+
+/*
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class GameController : MonoBehaviour
+{
+    [SerializeField]
+    private Sprite bgImage;
+
+    public Sprite[] puzzles;
+    public List<Sprite> gamePuzzles = new List<Sprite>();
+    public List<Button> btns = new List<Button>();
+
+    private bool firstGuess, secondGuess;
+
+    private int countGuesses;
+    private int countCorrectGuesses;
+    private int gameGuesses;
+
+    private int firstGuessIndex, secondGuessIndex;
+    private string firstGuessPuzzle, secondGuessPuzzle;
+
     // ★★★ 新增：WinPanel、LosePanel、Timer ★★★
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
@@ -240,7 +527,7 @@ public class GameController : MonoBehaviour
             Debug.LogError("MemMiniGameManager.Instance is null!");
     }
 }
-
+*/
 
 /*
 using System.Collections;

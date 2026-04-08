@@ -5,6 +5,111 @@ using UnityEngine.SceneManagement;
 public class MemMiniGameManager : MonoBehaviour
 {
     public static MemMiniGameManager Instance { get; private set; }
+
+    public string miniGameSceneName = "lvl_03";
+    private bool isMiniGameActive = false;
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    void Update()
+    {
+        if (isMiniGameActive)
+        {
+            if (Cursor.lockState != CursorLockMode.None)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+        }
+    }
+
+    public void OpenMiniGame()
+    {
+        if (isMiniGameActive) return;
+
+        // 冷却中直接拒绝
+        if (MiniGameCooldownManager.Instance != null &&
+            MiniGameCooldownManager.Instance.IsOnCooldown())
+        {
+            Debug.Log("Memory mini game is on cooldown.");
+            return;
+        }
+
+        // 一进入游戏就启动全局 cooldown
+        if (MiniGameCooldownManager.Instance != null)
+        {
+            MiniGameCooldownManager.Instance.StartCooldown();
+        }
+
+        StartCoroutine(LoadRoutine());
+    }
+
+    public void CloseMiniGame()
+    {
+        if (!isMiniGameActive) return;
+        StartCoroutine(UnloadRoutine());
+    }
+
+    private IEnumerator LoadRoutine()
+    {
+        isMiniGameActive = true;
+        FreezePlayer(true);
+
+        AsyncOperation op = SceneManager.LoadSceneAsync(
+            miniGameSceneName, LoadSceneMode.Additive);
+
+        while (!op.isDone) yield return null;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private IEnumerator UnloadRoutine()
+    {
+        AsyncOperation op = SceneManager.UnloadSceneAsync(miniGameSceneName);
+        while (!op.isDone) yield return null;
+
+        FreezePlayer(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        isMiniGameActive = false;
+    }
+
+    private void FreezePlayer(bool freeze)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null) return;
+
+        var tpc = player.GetComponent<StarterAssets.ThirdPersonController>();
+        if (tpc != null) tpc.enabled = !freeze;
+
+        var input = player.GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        if (input != null) input.enabled = !freeze;
+
+        var cc = player.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = !freeze;
+    }
+
+    public bool IsMiniGameActive() => isMiniGameActive;
+}
+
+
+/*
+using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class MemMiniGameManager : MonoBehaviour
+{
+    public static MemMiniGameManager Instance { get; private set; }
     public string miniGameSceneName = "lvl_03";
     private bool isMiniGameActive = false;
 
@@ -61,6 +166,7 @@ public class MemMiniGameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         isMiniGameActive = false;
+
     }
 
     private void FreezePlayer(bool freeze)
@@ -80,7 +186,7 @@ public class MemMiniGameManager : MonoBehaviour
 
     public bool IsMiniGameActive() => isMiniGameActive;
 }
-
+*/
 
 /*
 using System.Collections;
