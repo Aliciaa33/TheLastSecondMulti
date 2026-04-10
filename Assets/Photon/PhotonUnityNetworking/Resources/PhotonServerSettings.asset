@@ -64,6 +64,7 @@ MonoBehaviour:
   - RPC_EnterCooldownDisplay
   - RPC_ShowCooldownDisplay
   - RPC_SetDirectText_LocalOnly
+  - RPC_SyncBombRoundTimer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
