@@ -48,10 +48,19 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     // inherits a locked/invisible cursor from the previous one.
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        bool isGameScene = scene.name == "Game";
+
+        if (isGameScene)
+        {
+            // Reset mini game cooldown for fresh game session
+            MiniGameCooldownManager.Instance?.ResetCooldown();
+            Debug.Log($"Cooldown reset on new game scene load: {scene.name}, remaining: {MiniGameCooldownManager.Instance?.GetRemainingCooldown()}s");
+        }
+
         // The game scene locks the cursor itself via StarterAssetsInputs.
         // Menu and Loading scenes need it unlocked and visible.
-        bool isGameScene = scene.name != "Menu" && scene.name != "Loading";
-        if (!isGameScene)
+        bool isMenuScene = scene.name == "Menu" || scene.name == "Loading";
+        if (isMenuScene)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;

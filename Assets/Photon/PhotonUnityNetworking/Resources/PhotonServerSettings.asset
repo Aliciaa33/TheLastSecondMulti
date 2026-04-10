@@ -57,6 +57,7 @@ MonoBehaviour:
   - RPC_UsePotion
   - RPC_StartCooldown
   - RPC_StartMiniGameCooldown
+  - RPC_RequestUsePotion
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
