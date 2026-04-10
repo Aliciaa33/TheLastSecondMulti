@@ -39,6 +39,7 @@ public class NetworkPlayerSetup : MonoBehaviourPun
 
         gameObject.tag = "Player";
         Debug.Log("SetupLocalPlayer complete");
+        SetupParameterSync();
     }
 
     void SetupRemotePlayer()
@@ -52,5 +53,34 @@ public class NetworkPlayerSetup : MonoBehaviourPun
         if (cc != null) cc.enabled = false;
 
         gameObject.tag = "Player";
+    }
+
+    void SetupParameterSync()
+    {
+        var animatorView = GetComponent<PhotonAnimatorView>();
+
+        animatorView.SetParameterSynchronized(
+        "Blend",
+        PhotonAnimatorView.ParameterType.Float,
+        PhotonAnimatorView.SynchronizeType.Continuous
+        );
+
+        animatorView.SetParameterSynchronized(
+        "Jump",
+        PhotonAnimatorView.ParameterType.Bool,
+        PhotonAnimatorView.SynchronizeType.Discrete
+        );
+
+        animatorView.SetParameterSynchronized(
+        "FreeFall",
+        PhotonAnimatorView.ParameterType.Bool,
+        PhotonAnimatorView.SynchronizeType.Discrete
+        );
+
+        animatorView.SetParameterSynchronized(
+        "Grounded",
+        PhotonAnimatorView.ParameterType.Bool,
+        PhotonAnimatorView.SynchronizeType.Discrete
+        );
     }
 }
