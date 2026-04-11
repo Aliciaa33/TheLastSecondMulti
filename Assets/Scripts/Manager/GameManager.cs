@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager Instance { get; private set; }
 
     [Header("Game Settings")]
-    public int maxHP = 5;
-    public int currentHP = 5;
+    public int maxHP = 3;
+    public int currentHP = 3;
 
     [Header("Hint Settings")]
     public GameObject hintPrefab;
@@ -73,6 +73,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void InitializeGame()
     {
+        // re-assign the canvas reference in MiniGameManager after scene reload
+        MiniGameManager.uiCanvas = GameObject.Find("Canvas");
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         gameActive = true;
@@ -130,7 +132,16 @@ public class GameManager : MonoBehaviourPunCallbacks
         GenerateHintPos();
         ShuffleList(hintIndices);
 
-        (int password, List<(string, string)> questionHints) = QuestionManager.Instance.GetRandomQuestion();
+        int password = UnityEngine.Random.Range(1000, 9999);
+        List<(string, string)> questionHints = new List<(string, string)>
+        {
+            ($"{(password % 10).ToString()}", "The 4th digit."),
+            ($"{(password / 10 % 10).ToString()}", "The 3rd digit."),
+            ($"{(password / 100 % 10).ToString()}", "The 2nd digit."),
+            ($"{(password / 1000 % 10).ToString()}", "The 1st digit.")
+        };
+
+        // (int password, List<(string, string)> questionHints) = QuestionManager.Instance.GetRandomQuestion();
         this.bombPassword = password;
         Debug.Log($"New bomb password is {bombPassword}");
 

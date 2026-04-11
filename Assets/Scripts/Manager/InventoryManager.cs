@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using Photon.Pun;
 
 public class InventoryManager : MonoBehaviourPunCallbacks
@@ -17,6 +18,7 @@ public class InventoryManager : MonoBehaviourPunCallbacks
 
     private List<HintItem> collectedHints = new List<HintItem>();
     private int potionCount = 0;  // potions held but not yet used
+    private bool _potionBeingUsed = false; // lock flag to prevent multiple uses at once
 
     void Awake()
     {
@@ -89,10 +91,46 @@ public class InventoryManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        // Prevent race condition — only one use at a time
+        if (_potionBeingUsed) return;
+
         if (PhotonNetwork.IsConnected)
-            photonView.RPC("RPC_UsePotion", RpcTarget.All);
+            // Route through MasterClient for authority
+            photonView.RPC("RPC_RequestUsePotion", RpcTarget.MasterClient);
         else
             UsePotionLocally();
+    }
+
+    [PunRPC]
+    void RPC_RequestUsePotion()
+    {
+        // Only MasterClient processes this
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        // Check again on MasterClient side — prevents race condition
+        if (potionCount <= 0 || _potionBeingUsed)
+        {
+            // Debug.Log("Potion use rejected — none left or already being used");
+            return;
+        }
+
+        _potionBeingUsed = true;
+
+        // Tell all clients to execute the potion use
+        photonView.RPC("RPC_UsePotion", RpcTarget.All);
+
+        // Restore HP once — GameManager.Restore() handles its own sync
+        // prevent multiple restores
+        GameManager.Instance?.Restore();
+
+        // Unlock after brief delay
+        StartCoroutine(UnlockPotionUse());
+    }
+
+    IEnumerator UnlockPotionUse()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _potionBeingUsed = false;
     }
 
     [PunRPC]
@@ -102,9 +140,6 @@ public class InventoryManager : MonoBehaviourPunCallbacks
     {
         if (potionCount <= 0) return;
         potionCount--;
-
-        // Actually restore HP
-        GameManager.Instance?.Restore();
 
         if (UIManager.Instance != null)
             UIManager.Instance.ShowToast("Potion used! HP restored.", 3);
