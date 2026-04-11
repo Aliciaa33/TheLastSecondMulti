@@ -30,6 +30,13 @@ public class UIManager : MonoBehaviour
     [Header("Game Over UI")]
     [SerializeField] private GameObject gameOverCanvas;
 
+    [Header("Bomb Round Timer UI")]
+    public GameObject bombRoundTimerPanel;
+    public TextMeshProUGUI bombRoundTimerText;
+    public Color normalTimerColor = Color.black;
+    public Color warningTimerColor = Color.red;
+    public float warningThreshold = 10f;
+
     void Awake()
     {
         if (Instance == null)
@@ -50,6 +57,53 @@ public class UIManager : MonoBehaviour
 
         if (defusedBombsText != null)
             UpdateDefusedBombs();
+
+        if (bombRoundTimerPanel != null)
+            bombRoundTimerPanel.SetActive(true);
+
+        UpdateBombRoundTimerUI();
+    }
+
+    void Update()
+    {
+        UpdateBombRoundTimerUI();
+    }
+
+    private void UpdateBombRoundTimerUI()
+    {
+        if (bombRoundTimerText == null) return;
+
+        if (GameManager.Instance == null)
+        {
+            bombRoundTimerText.text = "Round --   --s";
+            bombRoundTimerText.color = normalTimerColor;
+            return;
+        }
+
+        int round = GameManager.Instance.currentRound;
+
+        if (round <= 0)
+        {
+            bombRoundTimerText.text = "Round --   --s";
+            bombRoundTimerText.color = normalTimerColor;
+            return;
+        }
+
+        if (GameManager.Instance.HasActiveBombTimer())
+        {
+            int seconds = Mathf.CeilToInt(GameManager.Instance.GetBombRemainingTime());
+            bombRoundTimerText.text = $"Round {round}   {seconds}s";
+
+            if (seconds <= warningThreshold)
+                bombRoundTimerText.color = warningTimerColor;
+            else
+                bombRoundTimerText.color = normalTimerColor;
+        }
+        else
+        {
+            bombRoundTimerText.text = $"Round {round}   --s";
+            bombRoundTimerText.color = normalTimerColor;
+        }
     }
 
     public void UpdateHP(int current, int max)

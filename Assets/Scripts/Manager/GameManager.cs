@@ -27,6 +27,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     public int potionCount = 0;
     public List<Transform> potionSpawnPoints = new List<Transform>();
 
+    [Header("Bomb Round Timer")]
+    public int currentRound = 0;
+
+    private bool bombTimerActive = false;
+    private double currentBombEndTime = -1d;
+
     public int defusedBombs = 0;
     public int goal = 3;
 
@@ -73,6 +79,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         Cursor.visible = false;
         gameActive = true;
         currentHP = maxHP;
+
+        currentRound = 0;
+        ClearBombTimerLocally();
+
         hintPrefab.SetActive(false);
         potionPrefab.SetActive(false);
         // Create hint spawn point indices
@@ -91,6 +101,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         // Initialize 3 potions at the start of each round
         for (int i = 0; i < 3; i++)
             SpawnPotion();
+
 
         // Update UI
         if (UIManager.Instance != null)
@@ -445,6 +456,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void OnBombExploded()
     {
+        ClearBombTimerLocally();
         if (!gameActive) return; // test whether the game has ended
         Debug.Log("收到炸弹爆炸事件，减少生命值"); // zhq
         TakeDamage();
@@ -460,6 +472,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void OnBombDefused()
     {
+        ClearBombTimerLocally();
         Debug.Log("Enter onbombdefused func in game manager");
         if (!PhotonNetwork.IsMasterClient)
         {
@@ -566,6 +579,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void GameOver(bool win)
     {
         gameActive = false;
+        ClearBombTimerLocally();
         OnGameOver?.Invoke();
 
         Debug.Log("Game Over");
@@ -598,4 +612,67 @@ public class GameManager : MonoBehaviourPunCallbacks
         BombFuse.OnBombDefused -= OnBombDefused;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
+
+    public bool HasActiveBombTimer()
+    {
+        return bombTimerActive;
+    }
+
+    public float GetBombRemainingTime()
+    {
+        if (!bombTimerActive) return 0f;
+
+        double now = PhotonNetwork.IsConnected
+            ? PhotonNetwork.Time
+            : Time.timeAsDouble;
+
+        float remaining = (float)(currentBombEndTime - now);
+        if (remaining < 0f) remaining = 0f;
+        return remaining;
+    }
+
+    public void RegisterNewBombRound(int round, float totalDuration)
+    {
+        double endTime = (PhotonNetwork.IsConnected
+            ? PhotonNetwork.Time
+            : Time.timeAsDouble) + totalDuration;
+
+        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
+        {
+            if (!PhotonNetwork.IsMasterClient) return;
+
+            photonView.RPC(
+                nameof(RPC_SyncBombRoundTimer),
+                RpcTarget.All,
+                round,
+                endTime
+            );
+        }
+        else
+        {
+            ApplyBombRoundTimer(round, endTime);
+        }
+    }
+
+    [PunRPC]
+    private void RPC_SyncBombRoundTimer(int round, double endTime)
+    {
+        ApplyBombRoundTimer(round, endTime);
+    }
+
+    private void ApplyBombRoundTimer(int round, double endTime)
+    {
+        currentRound = round;
+        currentBombEndTime = endTime;
+        bombTimerActive = true;
+    }
+
+    public void ClearBombTimerLocally()
+    {
+        bombTimerActive = false;
+        currentBombEndTime = -1d;
+    }
 }
+
+
