@@ -9,9 +9,6 @@ public class WhackAMoleExit : MonoBehaviour
         GetComponent<Button>().onClick.AddListener(() =>
         {
             MiniGameManager.Instance.ExitMiniGame(WhackAMoleGameManager.Instance.IsWin());
-
-            // Start cooldown for all players
-            MiniGameCooldownManager.Instance?.StartCooldown();
         });
     }
 }

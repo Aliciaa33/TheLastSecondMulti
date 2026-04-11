@@ -1,7 +1,7 @@
 // MiniGameTriggerZone.cs
 using UnityEngine;
 
-public class MiniGameTrigger : MonoBehaviour, IInteractable
+public class WhackAMoleTrigger : MonoBehaviour, IInteractable
 {
     public string miniGameSceneName = "WhackAMole";
 
@@ -27,6 +27,10 @@ public class MiniGameTrigger : MonoBehaviour, IInteractable
                 $"Please wait {Mathf.CeilToInt(remaining)}s before playing again!", 4);
             return;
         }
+
+        // Start cooldown IMMEDIATELY when anyone enters
+        // This prevents other players from entering simultaneously
+        MiniGameCooldownManager.Instance?.StartCooldown();
 
         // Enter mini game
         MiniGameManager.Instance.EnterMiniGame(miniGameSceneName);

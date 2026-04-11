@@ -9,7 +9,7 @@ public class MiniGameManager : MonoBehaviour
     public static MiniGameManager Instance { get; private set; }
 
     [Header("UICanvas")]
-    public GameObject uiCanvas;
+    public static GameObject uiCanvas;
 
     private bool _inMiniGame = false;
     private bool _pendingPotionReward = false;

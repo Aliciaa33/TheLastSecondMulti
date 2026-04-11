@@ -4169,8 +4169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30c39c0fa7f944e7ea36300bad3a25dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 5
-  currentHP: 5
+  maxHP: 3
+  currentHP: 3
   hintPrefab: {fileID: 7945514025845875850, guid: 3ac8e339f0fd74e49a153b90c0893982, type: 3}
   hintSpawnPoints:
   - {fileID: 0}
@@ -4429,9 +4429,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 5
+  m_MaxValue: 3
   m_WholeNumbers: 1
-  m_Value: 5
+  m_Value: 3
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -35244,7 +35244,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5019808085062252836, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
   m_PrefabInstance: {fileID: 1742074809}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1239259179
+--- !u!114 &1239259175
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -35253,7 +35253,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1239259174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c8046439ec14e4f84256ec9349c2b6, type: 3}
+  m_Script: {fileID: 11500000, guid: 6efb33934bbd947088be214f7b5f27e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   miniGameSceneName: WhackAMole
@@ -38438,7 +38438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -49540,7 +49540,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5019808085062252836, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1239259179}
+      addedObject: {fileID: 1239259175}
   m_SourcePrefab: {fileID: 100100000, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
 --- !u!1 &1746717827
 GameObject:
@@ -55043,7 +55043,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca083589a2a2045f9ae3ef70eb1531c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCanvas: {fileID: 1226636290}
 --- !u!4 &1939958121
 Transform:
   m_ObjectHideFlags: 0
@@ -55071,7 +55070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c697c6d3162a04b9e91f29e2894343cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooldownDuration: 120
+  cooldownDuration: 60
 --- !u!1 &1944688622
 GameObject:
   m_ObjectHideFlags: 0
