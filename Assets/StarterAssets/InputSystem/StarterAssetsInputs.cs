@@ -110,6 +110,11 @@ namespace StarterAssets
 
 		private void OnApplicationFocus(bool hasFocus)
 		{
+			// Don't interfere with cursor during mini game
+			if (MiniGameManager.Instance != null &&
+				MiniGameManager.Instance.IsInMiniGame())
+				return;
+
 			if (!_uiMode) // 只有在非 UI 模式下才锁定光标
 			{
 				SetCursorState(cursorLocked);

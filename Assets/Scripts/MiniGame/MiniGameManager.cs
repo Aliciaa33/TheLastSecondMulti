@@ -106,15 +106,9 @@ public class MiniGameManager : MonoBehaviour
 
     private void PauseGame()
     {
-        // Freeze the 3D game world
-        Time.timeScale = 0f;
-
         // Confine cursor to game window AND make it visible
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
-
-        // Pause Photon to prevent network events during mini game
-        PhotonNetwork.IsMessageQueueRunning = false;
 
         // Disable player input
         DisablePlayer();
@@ -125,15 +119,9 @@ public class MiniGameManager : MonoBehaviour
 
     private void ResumeGame()
     {
-        // Unfreeze the 3D game world
-        Time.timeScale = 1f;
-
         // Restore cursor lock
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        // Resume Photon
-        PhotonNetwork.IsMessageQueueRunning = true;
 
         // Re-enable player input
         EnablePlayer();
@@ -190,6 +178,22 @@ public class MiniGameManager : MonoBehaviour
     {
         _miniGameCursorTexture = texture;
         _miniGameCursorHotspot = hotspot;
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (!_inMiniGame) return;
+
+        if (hasFocus)
+        {
+            // Only reapply when window regains focus
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+
+            if (_miniGameCursorTexture != null && !_pauseCursorOverride)
+                Cursor.SetCursor(_miniGameCursorTexture,
+                    _miniGameCursorHotspot, CursorMode.Auto);
+        }
     }
 
     public bool IsInMiniGame() => _inMiniGame;
