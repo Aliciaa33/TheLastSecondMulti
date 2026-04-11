@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using System.Collections;
-// using Microsoft.VisualBasic;
+using Microsoft.VisualBasic;
 
 public class MiniGameManager : MonoBehaviour
 {

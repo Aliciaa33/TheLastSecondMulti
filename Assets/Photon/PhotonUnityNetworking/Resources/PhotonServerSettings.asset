@@ -57,14 +57,6 @@ MonoBehaviour:
   - RPC_UsePotion
   - RPC_StartCooldown
   - RPC_StartMiniGameCooldown
-  - RPC_HideChat_LocalOnly
-  - RPC_ReceiveTransform
-  - RPC_ShowChat_LocalOnly
-  - RPC_StartMemCooldown
-  - RPC_EnterCooldownDisplay
-  - RPC_ShowCooldownDisplay
-  - RPC_SetDirectText_LocalOnly
-  - RPC_SyncBombRoundTimer
   - RPC_RequestUsePotion
   DisableAutoOpenWizard: 1
   ShowSettings: 1
