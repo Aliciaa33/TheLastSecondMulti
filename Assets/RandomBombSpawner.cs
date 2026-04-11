@@ -25,11 +25,14 @@ public class RandomBombPositioner : MonoBehaviourPun
 
     private bool isWaitingToSpawn = false;
     private bool isGameOver = false;
+    private int spawnedBombCount = 0;
 
     void Start()
     {
         if (spawnArea == null)
             Debug.LogWarning("Spawn area (BoxCollider) is not assigned on " + gameObject.name);
+
+        spawnedBombCount = 0;
 
         BombFuse.OnBombExploded += OnBombExploded;
         BombFuse.OnBombDefused += OnBombDefused;
@@ -142,11 +145,39 @@ public class RandomBombPositioner : MonoBehaviourPun
 
         if (found)
         {
+            GameObject bombObj;
+
+            if (PhotonNetwork.IsConnected)
+                bombObj = PhotonNetwork.Instantiate("BombModel", spawnPosition, Quaternion.identity);
+            else
+                bombObj = Instantiate(bombPrefab, spawnPosition, Quaternion.identity);
+
+            spawnedBombCount++;
+
+            BombFuse fuse = bombObj.GetComponent<BombFuse>();
+            if (fuse != null && GameManager.Instance != null)
+            {
+                float totalDuration = fuse.spawnDelay + fuse.FuseTime;
+                GameManager.Instance.RegisterNewBombRound(spawnedBombCount, totalDuration);
+            }
+            else
+            {
+                Debug.LogWarning("BombFuse or GameManager.Instance is null, 无法注册炸弹轮次计时");
+            }
+
+            Debug.Log("✅ 炸弹生成成功! 位置: " + spawnPosition);
+            Debug.Log("当前 Round: " + spawnedBombCount);
+            return true;
+        }
+
+        /*
+        if (found)
+        {
             PhotonNetwork.Instantiate("BombModel", spawnPosition, Quaternion.identity);
             Debug.Log("✅ 炸弹生成成功! 位置: " + spawnPosition);
             return true;
         }
-
+        */
         /*
         int surfaceMask = groundMask | obstacleMask;
 
