@@ -119,6 +119,10 @@ public class InventoryManager : MonoBehaviourPunCallbacks
         // Tell all clients to execute the potion use
         photonView.RPC("RPC_UsePotion", RpcTarget.All);
 
+        // Restore HP once — GameManager.Restore() handles its own sync
+        // prevent multiple restores
+        GameManager.Instance?.Restore();
+
         // Unlock after brief delay
         StartCoroutine(UnlockPotionUse());
     }
@@ -136,9 +140,6 @@ public class InventoryManager : MonoBehaviourPunCallbacks
     {
         if (potionCount <= 0) return;
         potionCount--;
-
-        // Actually restore HP
-        GameManager.Instance?.Restore();
 
         if (UIManager.Instance != null)
             UIManager.Instance.ShowToast("Potion used! HP restored.", 3);
