@@ -4445,6 +4445,8 @@ MonoBehaviour:
   inventoryCloseButton: {fileID: 1221620480}
   potionCountText: {fileID: 1286863449}
   usePotionButton: {fileID: 1386658702}
+  confirmPanel: {fileID: 1052232840}
+  passwordPanel: {fileID: 1060861491}
 --- !u!114 &149315155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8001,6 +8003,8 @@ MonoBehaviour:
   pauseKey: 112
   escapeAlsoPauses: 1
   pauseCanvas: {fileID: 1698765027}
+  confirmPanel: {fileID: 1052232840}
+  passwordPanel: {fileID: 1060861491}
 --- !u!4 &300905306
 Transform:
   m_ObjectHideFlags: 0

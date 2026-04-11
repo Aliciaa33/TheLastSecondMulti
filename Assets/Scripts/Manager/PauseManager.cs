@@ -32,6 +32,10 @@ public class PauseManager : MonoBehaviour
     private const string MusicVolumeKey = "MusicVolume";
     private const string SFXVolumeKey = "SFXVolume";
 
+    // prevent pause panel during defusing
+    public GameObject confirmPanel;
+    public GameObject passwordPanel;
+
     void Awake()
     {
         // pauseCanvas = GameObject.Find("PauseCanvas");
@@ -66,6 +70,9 @@ public class PauseManager : MonoBehaviour
         // Don't allow pausing during mini game
         if (MiniGameManager.Instance != null && MiniGameManager.Instance.IsInMiniGame())
             return;
+
+        // block pause panel toggle if confirm or password panel is open
+        if (confirmPanel.activeSelf || passwordPanel.activeSelf) return;
 
         if (isQuitting) return;
 
