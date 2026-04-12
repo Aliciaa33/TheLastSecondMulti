@@ -4406,7 +4406,7 @@ MonoBehaviour:
   potionSpawnPoints: []
   currentRound: 0
   defusedBombs: 0
-  goal: 3
+  goal: 5
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 0
