@@ -72,26 +72,6 @@ public class WhackAMoleNPC : MonoBehaviourPunCallbacks
         agent = GetComponent<NavMeshAgent>();
         networkPosition = transform.position;
         networkRotation = transform.rotation;
-
-        EnsureChatBubbleReference();
-    }
-
-    private void EnsureChatBubbleReference()
-    {
-        if (chatBubble != null) return;
-
-        chatBubble = GetComponentInChildren<WhackAMoleChatBubbleController>(true);
-        if (chatBubble == null)
-        {
-            var allBubbles = Resources.FindObjectsOfTypeAll<WhackAMoleChatBubbleController>();
-            if (allBubbles.Length > 0)
-                chatBubble = allBubbles[0];
-        }
-
-        if (chatBubble == null)
-        {
-            Debug.LogWarning("WhackAMoleNPC: WhackAMoleChatBubbleController not found. Please assign it in inspector or make it a child of the NPC.");
-        }
     }
 
     void Start()
@@ -617,21 +597,18 @@ public class WhackAMoleNPC : MonoBehaviourPunCallbacks
 
     private void LocalShowChat(string msg, float perCharDelay)
     {
-        EnsureChatBubbleReference();
         if (chatBubble == null) return;
         chatBubble.ShowMessage(msg, perCharDelay);
     }
 
     private void LocalSetDirectText(string text)
     {
-        EnsureChatBubbleReference();
         if (chatBubble == null) return;
         chatBubble.SetDirectText(text);
     }
 
     private void LocalHideChat()
     {
-        EnsureChatBubbleReference();
         if (chatBubble == null) return;
         chatBubble.HideWithStop();
     }
