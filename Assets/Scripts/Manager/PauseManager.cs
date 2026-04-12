@@ -75,7 +75,11 @@ public class PauseManager : MonoBehaviour
         if (confirmPanel.activeSelf || passwordPanel.activeSelf) return;
 
         // block pause panel toggele if the game is over (inactive)
-        if (!GameManager.Instance.gameActive) return;
+        if (!GameManager.Instance.gameActive)
+        {
+            SetPanelVisible(false);
+            return;
+        }
 
         if (isQuitting) return;
 

@@ -372,7 +372,9 @@ public class BombInteraction : MonoBehaviourPun
         }
 
         // zys: 只有在游戏进行中才锁定鼠标
-        if (GameManager.Instance != null && GameManager.Instance.gameActive && !MiniGameManager.Instance.IsInMiniGame())
+        if (GameManager.Instance != null &&GameManager.Instance.gameActive &&
+            MiniGameManager.Instance != null && !MiniGameManager.Instance.IsInMiniGame() &&
+            PauseManager.Instance != null && !PauseManager.Instance.IsPaused)
         {
             EnablePlayerInput();
         }
@@ -473,14 +475,14 @@ public class BombInteraction : MonoBehaviourPun
             HideAllUI();
             EnablePlayerInput();
 
-			if (nearestBomb != null)
-			{
+            if (nearestBomb != null)
+            {
                 BombFuse fuse = nearestBomb.GetComponent<BombFuse>();
-				if (fuse != null)
-				{
+                if (fuse != null)
+                {
                     fuse.DefuseBomb();
-				}
-			}
+                }
+            }
 
             //GameManager.Instance.defuseBomb();
 
@@ -521,19 +523,19 @@ public class BombInteraction : MonoBehaviourPun
 
             nearestBomb = null;
         }
-            /*
-            if (GameManager.Instance != null)
-            {
-                // 通知管理器：炸弹已爆炸
-                GameManager.Instance.BombExploded();
-            }
-            if (passwordInput != null)
-            {
-                passwordInput.text = "";
-                passwordInput.Select();
-                passwordInput.ActivateInputField();
-            }
-            */
+        /*
+        if (GameManager.Instance != null)
+        {
+            // 通知管理器：炸弹已爆炸
+            GameManager.Instance.BombExploded();
+        }
+        if (passwordInput != null)
+        {
+            passwordInput.text = "";
+            passwordInput.Select();
+            passwordInput.ActivateInputField();
+        }
+        */
     }
 
     void OnCancelPassword()
