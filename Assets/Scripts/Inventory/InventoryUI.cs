@@ -21,6 +21,8 @@ public class InventoryUI : MonoBehaviour
 
     private bool isInventoryOpen = false;
     private StarterAssets.StarterAssetsInputs playerInputs;
+    public GameObject confirmPanel;
+    public GameObject passwordPanel;
 
     void Awake()
     {
@@ -43,7 +45,14 @@ public class InventoryUI : MonoBehaviour
     void Update()
     {
         if (playerInputs == null) { FindPlayerInputs(); return; }
-        if (playerInputs.GetInventoryInput()) ToggleInventory();
+
+        // Consume inventory input every frame so it doesn't trigger after a UI panel closes.
+        bool inventoryPressed = playerInputs.GetInventoryInput();
+
+        // block inventory toggle if confirm or password panel is open
+        if (confirmPanel.activeSelf || passwordPanel.activeSelf) return;
+
+        if (inventoryPressed) ToggleInventory();
     }
 
     void FindPlayerInputs()

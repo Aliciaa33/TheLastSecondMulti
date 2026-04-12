@@ -15,6 +15,10 @@ public class MiniGameManager : MonoBehaviour
     private bool _pendingPotionReward = false;
     private string _currentMiniGameScene;
 
+    // Main camera stacking support while the mini-game is active.
+    private readonly System.Collections.Generic.List<Camera> _disabledMainCameras = 
+        new System.Collections.Generic.List<Camera>();
+
     // Cursor Settings
     private Texture2D _miniGameCursorTexture;
     private Vector2 _miniGameCursorHotspot;
@@ -106,15 +110,21 @@ public class MiniGameManager : MonoBehaviour
 
     private void PauseGame()
     {
-        // Freeze the 3D game world
-        Time.timeScale = 0f;
-
         // Confine cursor to game window AND make it visible
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
 
-        // Pause Photon to prevent network events during mini game
-        PhotonNetwork.IsMessageQueueRunning = false;
+        // Confine any main-scene cameras so the 3D world does not render on top of the mini-game.
+        _disabledMainCameras.Clear();
+        foreach (Camera cam in Camera.allCameras)
+        {
+            if (cam == null || !cam.enabled) continue;
+            if (cam.gameObject.scene.name == gameObject.scene.name)
+            {
+                cam.enabled = false;
+                _disabledMainCameras.Add(cam);
+            }
+        }
 
         // Disable player input
         DisablePlayer();
@@ -125,15 +135,20 @@ public class MiniGameManager : MonoBehaviour
 
     private void ResumeGame()
     {
-        // Unfreeze the 3D game world
-        Time.timeScale = 1f;
+        // Restore cursor lock only when the game over panel of 3D game isn;'t shown
+        if (GameManager.Instance.gameActive)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
-        // Restore cursor lock
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        // Resume Photon
-        PhotonNetwork.IsMessageQueueRunning = true;
+        // Re-enable main scene cameras that were disabled at pause time.
+        foreach (Camera cam in _disabledMainCameras)
+        {
+            if (cam != null)
+                cam.enabled = true;
+        }
+        _disabledMainCameras.Clear();
 
         // Re-enable player input
         EnablePlayer();
@@ -190,6 +205,22 @@ public class MiniGameManager : MonoBehaviour
     {
         _miniGameCursorTexture = texture;
         _miniGameCursorHotspot = hotspot;
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (!_inMiniGame) return;
+
+        if (hasFocus)
+        {
+            // Only reapply when window regains focus
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+
+            if (_miniGameCursorTexture != null && !_pauseCursorOverride)
+                Cursor.SetCursor(_miniGameCursorTexture,
+                    _miniGameCursorHotspot, CursorMode.Auto);
+        }
     }
 
     public bool IsInMiniGame() => _inMiniGame;

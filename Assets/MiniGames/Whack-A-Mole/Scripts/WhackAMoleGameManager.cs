@@ -30,6 +30,7 @@ public class WhackAMoleGameManager : MonoBehaviour
   [SerializeField] public GameObject loseIcon;
 
   // Hardcoded variables you may want to tune.
+  [SerializeField] private float autoExitDelay = 5f;
   private float startingTime = 3f;
   private int goal = 50;
 
@@ -39,6 +40,7 @@ public class WhackAMoleGameManager : MonoBehaviour
   private int score;
   private bool playing = false;
   private bool win = false;
+  private bool autoExitScheduled = false;
 
   void Awake()
   {
@@ -90,12 +92,11 @@ public class WhackAMoleGameManager : MonoBehaviour
   {
     // Stop hammer cursor override so normal cursor shows on game over panel
     if (MiniGameManager.Instance != null)
-        MiniGameManager.Instance.StopCursorOverride();
-    else
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+      MiniGameManager.Instance.StopCursorOverride();
 
-    // set back to default cursor when game over
-    // Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    // Restore a visible cursor and unlock it for the game over UI.
+    Cursor.lockState = CursorLockMode.None;
+    Cursor.visible = true;
 
     gameOverPanel.SetActive(true);
     if (score >= goal)
@@ -117,6 +118,12 @@ public class WhackAMoleGameManager : MonoBehaviour
     resultScore.text = $"Score: {score} / {goal}";
     StartCoroutine(SlideInPanel(gameOverPanel.transform));
 
+    if (!autoExitScheduled)
+    {
+      autoExitScheduled = true;
+      StartCoroutine(AutoExitAfterDelay());
+    }
+
     // Hide the game UI.
     // Hide all moles.
     foreach (Mole mole in moles)
@@ -125,6 +132,16 @@ public class WhackAMoleGameManager : MonoBehaviour
     }
     // Stop the game and show the start UI.
     playing = false;
+  }
+
+  private IEnumerator AutoExitAfterDelay()
+  {
+    yield return new WaitForSecondsRealtime(autoExitDelay);
+
+    if (MiniGameManager.Instance != null && MiniGameManager.Instance.IsInMiniGame())
+    {
+      MiniGameManager.Instance.ExitMiniGame(win);
+    }
   }
 
   // Animation for sliding in the game over panel.
@@ -155,6 +172,9 @@ public class WhackAMoleGameManager : MonoBehaviour
   {
     if (playing)
     {
+      // Stop the mini game when the 3D game is over
+      if (!GameManager.Instance.gameActive) GameOver();
+
       // Update time.
       timeRemaining -= Time.unscaledDeltaTime;
       if (timeRemaining <= 0)

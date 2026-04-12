@@ -4445,6 +4445,8 @@ MonoBehaviour:
   inventoryCloseButton: {fileID: 1221620480}
   potionCountText: {fileID: 1286863449}
   usePotionButton: {fileID: 1386658702}
+  confirmPanel: {fileID: 1052232840}
+  passwordPanel: {fileID: 1060861491}
 --- !u!114 &149315155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8001,6 +8003,8 @@ MonoBehaviour:
   pauseKey: 112
   escapeAlsoPauses: 1
   pauseCanvas: {fileID: 1698765027}
+  confirmPanel: {fileID: 1052232840}
+  passwordPanel: {fileID: 1060861491}
 --- !u!4 &300905306
 Transform:
   m_ObjectHideFlags: 0
@@ -52421,6 +52425,10 @@ PrefabInstance:
     - target: {fileID: 4383292717093021573, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
       propertyPath: m_Name
       value: WhackAMoleGameBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 4383292717093021573, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9168264264388511351, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
       propertyPath: m_LocalPosition.x

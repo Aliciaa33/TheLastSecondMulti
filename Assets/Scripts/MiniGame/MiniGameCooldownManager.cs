@@ -30,7 +30,7 @@ public class MiniGameCooldownManager : MonoBehaviour
             _onCooldown = false;
 
             if (UIManager.Instance != null)
-                UIManager.Instance.ShowToast("Whack-A-Mole is available again!", 3);
+                UIManager.Instance.ShowToast("Mini Game is available again!", 3);
         }
     }
 

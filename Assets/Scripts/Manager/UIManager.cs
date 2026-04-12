@@ -134,6 +134,11 @@ public class UIManager : MonoBehaviour
     // type: 0 = hint, 1 = potion, 2 = bomb, 3 = good msg, 4 = bad msg
     public void ShowToast(string message, int type)
     {
+        // Don't show game world toasts during mini game
+        if (MiniGameManager.Instance != null &&
+            MiniGameManager.Instance.IsInMiniGame())
+            return;
+
         if (type == 3 && msgToastPanel != null && msgToastTitle != null && msgToastText != null)
         {
             msgToastTitle.text = "Congratulations!";
