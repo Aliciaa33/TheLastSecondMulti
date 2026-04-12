@@ -74,6 +74,9 @@ public class PauseManager : MonoBehaviour
         // block pause panel toggle if confirm or password panel is open
         if (confirmPanel.activeSelf || passwordPanel.activeSelf) return;
 
+        // block pause panel toggele if the game is over (inactive)
+        if (!GameManager.Instance.gameActive) return;
+
         if (isQuitting) return;
 
         if (playerInputs == null)
@@ -110,7 +113,6 @@ public class PauseManager : MonoBehaviour
     public void Pause()
     {
         isPaused = true;
-        Time.timeScale = 0f;
         if (playerInputs != null) playerInputs.SetUIMode(true);
         SetPanelVisible(true);
     }
@@ -118,7 +120,6 @@ public class PauseManager : MonoBehaviour
     public void Resume()
     {
         isPaused = false;
-        Time.timeScale = 1f;
         if (playerInputs != null) playerInputs.SetUIMode(false);
         SetPanelVisible(false);
         if (settingsOpen) ToggleSettings();

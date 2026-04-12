@@ -372,7 +372,7 @@ public class BombInteraction : MonoBehaviourPun
         }
 
         // zys: 只有在游戏进行中才锁定鼠标
-        if (GameManager.Instance != null && GameManager.Instance.gameActive)
+        if (GameManager.Instance != null && GameManager.Instance.gameActive && !MiniGameManager.Instance.IsInMiniGame())
         {
             EnablePlayerInput();
         }

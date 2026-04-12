@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1e2e51d471e4cbf8e696d4aebe7937, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FuseTime: 40
+  FuseTime: 5
   explosionEffect: {fileID: 8104860787731010414, guid: 2a78ade23ee194487bd10b584d16bc8c, type: 3}
   spawnDelay: 2
 --- !u!114 &1259441969288779192

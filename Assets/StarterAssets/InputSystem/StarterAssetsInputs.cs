@@ -115,6 +115,11 @@ namespace StarterAssets
 				MiniGameManager.Instance.IsInMiniGame())
 				return;
 
+			// Don't interfere with cursor when game over
+			if (GameManager.Instance != null &&
+				!GameManager.Instance.gameActive)
+				return;
+
 			if (!_uiMode) // 只有在非 UI 模式下才锁定光标
 			{
 				SetCursorState(cursorLocked);

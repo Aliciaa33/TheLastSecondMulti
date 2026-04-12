@@ -31,7 +31,7 @@ public class WhackAMoleGameManager : MonoBehaviour
 
   // Hardcoded variables you may want to tune.
   [SerializeField] private float autoExitDelay = 5f;
-  private float startingTime = 3f;
+  private float startingTime = 60f;
   private int goal = 50;
 
   // Global variables
