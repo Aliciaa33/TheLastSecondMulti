@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private double currentBombEndTime = -1d;
 
     public int defusedBombs = 0;
-    public int goal = 3;
+    public int goal = 5;
 
     [SerializeField] private LayerMask obstacleLayerMask = 8;
     private StarterAssets.StarterAssetsInputs playerInputs;
@@ -98,8 +98,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         SpawnHint();
 
-        // Initialize 3 potions at the start of each round
-        for (int i = 0; i < 3; i++)
+        // Initialize 2 potions at the start of each round
+        for (int i = 0; i < 2; i++)
             SpawnPotion();
 
 
@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         InventoryManager.Instance.ClearInventory(); // clear up the inventory
         ClearExistingHints();
         SpawnHint();
-        SpawnPotion();
+        // SpawnPotion();
     }
 
     void SpawnHint()

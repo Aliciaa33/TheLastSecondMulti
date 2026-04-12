@@ -111,11 +111,17 @@ public class PauseManager : MonoBehaviour
 
     public void TogglePause()
     {
+        if (MiniGameManager.Instance != null && MiniGameManager.Instance.IsInMiniGame())
+            return;
+
         if (isPaused) Resume(); else Pause();
     }
 
     public void Pause()
     {
+        if (MiniGameManager.Instance != null && MiniGameManager.Instance.IsInMiniGame())
+            return;
+
         isPaused = true;
         if (playerInputs != null) playerInputs.SetUIMode(true);
         SetPanelVisible(true);
