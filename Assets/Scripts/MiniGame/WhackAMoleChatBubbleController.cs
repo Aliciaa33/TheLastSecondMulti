@@ -52,6 +52,9 @@ public class WhackAMoleChatBubbleController : MonoBehaviour
                 return;
 
             MiniGameManager.Instance.EnterMiniGame(miniGameSceneName);
+
+            // Start cooldown immediately to prevent others from entering simultaneously
+            MiniGameCooldownManager.Instance?.StartCooldown();
         }
     }
 
