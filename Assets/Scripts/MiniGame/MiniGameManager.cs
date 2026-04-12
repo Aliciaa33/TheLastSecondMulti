@@ -135,9 +135,12 @@ public class MiniGameManager : MonoBehaviour
 
     private void ResumeGame()
     {
-        // Restore cursor lock
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Restore cursor lock only when the game over panel of 3D game isn;'t shown
+        if (GameManager.Instance.gameActive)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
         // Re-enable main scene cameras that were disabled at pause time.
         foreach (Camera cam in _disabledMainCameras)

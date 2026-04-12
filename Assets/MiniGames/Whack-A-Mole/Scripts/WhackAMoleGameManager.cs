@@ -31,7 +31,7 @@ public class WhackAMoleGameManager : MonoBehaviour
 
   // Hardcoded variables you may want to tune.
   [SerializeField] private float autoExitDelay = 5f;
-  private float startingTime = 60f;
+  private float startingTime = 3f;
   private int goal = 50;
 
   // Global variables
@@ -172,6 +172,9 @@ public class WhackAMoleGameManager : MonoBehaviour
   {
     if (playing)
     {
+      // Stop the mini game when the 3D game is over
+      if (!GameManager.Instance.gameActive) GameOver();
+
       // Update time.
       timeRemaining -= Time.unscaledDeltaTime;
       if (timeRemaining <= 0)
