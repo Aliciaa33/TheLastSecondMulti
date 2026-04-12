@@ -79,6 +79,18 @@ public class NPCSpawner : MonoBehaviour
         }
 
         PhotonNetwork.Instantiate(npcPrefabResourcePath, spawnPos, spawnRotation);
+
+        //zys: Spawn Whack A Mole NPC
+        if (NavMesh.SamplePosition(spawnPosition, out hit, navSampleMaxDistance, NavMesh.AllAreas))
+        {
+            spawnPos = hit.position; // 找到合适 NavMesh 点
+        }
+        else
+        {
+            Debug.LogWarning($"NPCSpawner: spawnPosition {spawnPosition} not on NavMesh. Will instantiate at original position (agent may error).");
+        }
+
+        PhotonNetwork.Instantiate("WhackAMoleNPC", spawnPos, spawnRotation);
     }
 }
 
