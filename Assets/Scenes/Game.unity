@@ -52426,6 +52426,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WhackAMoleGameBox
       objectReference: {fileID: 0}
+    - target: {fileID: 4383292717093021573, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9168264264388511351, guid: 93f22b8cca60a42e295726ed3fba33f4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 100
