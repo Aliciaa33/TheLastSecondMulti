@@ -90,10 +90,10 @@ public class PausePanelStyler : MonoBehaviour
         if (go == null) return;
         TMP_Text t = go.GetComponent<TMP_Text>();
         if (t == null) return;
-        t.fontSize = 38;
+        t.fontSize = 42;
         t.fontStyle = FontStyles.Bold;
         t.color = Color.white;
-        t.text = "// <color=#FF4444>PAUSED</color> //";
+        t.text = "<color=#FF4444>PAUSED</color>";
         t.outlineWidth = 0.12f;
         t.outlineColor = NeonBlue;
     }
@@ -135,7 +135,7 @@ public class PausePanelStyler : MonoBehaviour
         {
             label.color = textCol;
             label.fontStyle = FontStyles.Bold;
-            label.fontSize = 20;
+            label.fontSize = 28;
             string dot = isQuit ? "<color=#FF6666>•</color>" : "<color=#1AE4FF>•</color>";
             string raw = label.text.Replace("•", "").Trim();
             // Guard against double-adding dots on re-runs
