@@ -23,6 +23,20 @@ public class AudioManager : MonoBehaviour
         MusicSource.Play();
     }
 
+    void Update()
+    {
+        if (MemMiniGameManager.Instance != null && MemMiniGameManager.Instance.IsMiniGameActive())
+        {
+            if (MusicSource.isPlaying)
+                MusicSource.Pause();
+        }
+        else
+        {
+            if (!MusicSource.isPlaying)
+                MusicSource.UnPause();
+        }
+    }
+
     public void PlaySFX(AudioClip clip)
     {
         SFXSource.PlayOneShot(clip);

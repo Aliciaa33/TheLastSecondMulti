@@ -11,8 +11,8 @@ using Photon.Realtime;
 public class BombInteraction : MonoBehaviourPun
 {
     [Header("UI References")]
-    public GameObject confirmDefuseUI; // 确认拆弹界面
-    public GameObject passwordInputUI; // 密码输入界面
+    public static GameObject confirmDefuseUI; // 确认拆弹界面
+    public static GameObject passwordInputUI; // 密码输入界面
 
     public Button confirmButton;       // 确认拆弹按钮
     public Button cancelButton;        // 取消拆弹按钮
@@ -372,7 +372,7 @@ public class BombInteraction : MonoBehaviourPun
         }
 
         // zys: 只有在游戏进行中才锁定鼠标
-        if (GameManager.Instance != null &&GameManager.Instance.gameActive &&
+        if (GameManager.Instance != null && GameManager.Instance.gameActive &&
             MiniGameManager.Instance != null && !MiniGameManager.Instance.IsInMiniGame() &&
             PauseManager.Instance != null && !PauseManager.Instance.IsPaused)
         {
@@ -458,6 +458,8 @@ public class BombInteraction : MonoBehaviourPun
     void OnCancelDefuse()
     {
         HideAllUI();
+        // zys: 取消解除炸弹时要恢复玩家的输入控制
+        EnablePlayerInput();
         Debug.Log("取消拆弹");
     }
 

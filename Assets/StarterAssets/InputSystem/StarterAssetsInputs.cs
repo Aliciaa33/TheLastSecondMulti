@@ -120,6 +120,9 @@ namespace StarterAssets
 				!GameManager.Instance.gameActive)
 				return;
 
+			if (BombInteraction.confirmDefuseUI != null && BombInteraction.confirmDefuseUI.activeInHierarchy) return;
+			if (BombInteraction.passwordInputUI != null && BombInteraction.passwordInputUI.activeInHierarchy) return;
+
 			if (!_uiMode) // 只有在非 UI 模式下才锁定光标
 			{
 				SetCursorState(cursorLocked);
