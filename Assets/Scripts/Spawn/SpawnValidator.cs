@@ -25,8 +25,8 @@ public static class SpawnValidator
         if (tableMask == 0)
             tableMask = LayerMask.GetMask("Table");
 
-        float halfX = areaSize.x * 0.5f;
-        float halfZ = areaSize.z * 0.5f;
+        float halfX = areaSize.x * 0.5f - 10f;
+        float halfZ = areaSize.z * 0.5f - 10f;
         float rayStartHeight = areaCenter.y + areaSize.y + 50f;
 
         for (int i = 0; i < maxAttempts; i++)
