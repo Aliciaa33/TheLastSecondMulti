@@ -4876,7 +4876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MusicSource: {fileID: 1765087100}
   SFXSource: {fileID: 1657877495}
-  background: {fileID: 0}
+  background: {fileID: 8300000, guid: 6bef01bf4c42e5346a90510893e14d5d, type: 3}
   walking: {fileID: 8300000, guid: d90ce091e512c435baed93d244d62d73, type: 3}
   running: {fileID: 8300000, guid: 0e20bcd7e6c1d4a99854b218fe976c69, type: 3}
   jumping: {fileID: 8300000, guid: a7bc5af91d90941b1869ddb180f048fb, type: 3}
@@ -53469,7 +53469,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0

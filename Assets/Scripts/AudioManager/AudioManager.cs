@@ -15,6 +15,14 @@ public class AudioManager : MonoBehaviour
     public AudioClip jumping;
     public AudioClip interact;
 
+    void Start()
+    {
+        // Auto-play BGM when AudioManager starts in Game scene
+        MusicSource.clip = background;
+        MusicSource.loop = true;
+        MusicSource.Play();
+    }
+
     public void PlaySFX(AudioClip clip)
     {
         SFXSource.PlayOneShot(clip);

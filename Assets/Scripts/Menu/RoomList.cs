@@ -14,6 +14,9 @@ public class RoomList : MonoBehaviourPunCallbacks
     [SerializeField] private TextMeshProUGUI statusText;
     // [SerializeField] private Button refreshButton;
 
+    [Header("Audio Source")]
+    [SerializeField] AudioSource musicSource;
+
     private Dictionary<string, RoomInfo> cachedRoomList = new Dictionary<string, RoomInfo>();
 
     void Start()
@@ -25,6 +28,9 @@ public class RoomList : MonoBehaviourPunCallbacks
         }
 
         statusText.text = "Fetching available rooms...";
+
+        // Play background music
+        musicSource.Play();
     }
 
     public void OnCreateRoomButtonClicked()

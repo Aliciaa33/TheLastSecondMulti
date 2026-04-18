@@ -13,6 +13,9 @@ public class CreateRoom : MonoBehaviourPunCallbacks
     [SerializeField] private Button startButton;
     [SerializeField] private int maxPlayersPerRoom = 4;
 
+    [Header("Audio Source")]
+    [SerializeField] AudioSource musicSource;
+
     private bool isRoomCreated = false;
     private string createdRoomName;
     private bool isLeaving = false; // guard against double-back
@@ -41,6 +44,9 @@ public class CreateRoom : MonoBehaviourPunCallbacks
         {
             Debug.LogWarning("[CreateRoom] Not room creator and not in room. Skipping room creation.");
         }
+
+        // Play background music
+        musicSource.Play();
     }
 
     private IEnumerator WaitAndCreateRoom()

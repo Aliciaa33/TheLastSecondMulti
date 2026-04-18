@@ -2650,7 +2650,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNameInput: {fileID: 235115535}
   musicSource: {fileID: 2133334637}
-  background: {fileID: 8300000, guid: c3a18ca900dfa444a88a888bb1c75638, type: 3}
+  background: {fileID: 8300000, guid: d0a5a1eb47036e44d8b812aa2b09a524, type: 3}
 --- !u!82 &2133334637
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2663,7 +2663,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
