@@ -174,8 +174,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Player Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 310e004503f6442c5a714e55cc32ac83, type: 2}
+  m_sharedMaterial: {fileID: -5660775149628104760, guid: 310e004503f6442c5a714e55cc32ac83, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -537,7 +537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
+  ShowLayerWeightsInspector: 0
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 1
@@ -624,8 +624,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c4194dff2f0b4b08bcf90c3a51b1921, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  confirmDefuseUI: {fileID: 0}
-  passwordInputUI: {fileID: 0}
   confirmButton: {fileID: 0}
   cancelButton: {fileID: 0}
   passwordInput: {fileID: 0}
