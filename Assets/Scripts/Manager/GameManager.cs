@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (ConnectToServer.Instance != null)
         {
             GameMode mode = ConnectToServer.Instance.GetGameMode();
-            Debug.Log("Game running in mode: " + mode);
+            // Debug.Log("Game running in mode: " + mode);
         }
         InitializeGame();
         // 订阅炸弹爆炸事件
@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Vector3[] positions, Quaternion[] rotations)
     {
         this.bombPassword = password;
-        Debug.Log($"Bomb password synced: {password}");
+        // Debug.Log($"Bomb password synced: {password}");
         SpawnHintsLocally(password, numbers, hints, positions, rotations);
     }
 
@@ -582,7 +582,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         ClearBombTimerLocally();
         OnGameOver?.Invoke();
 
-        Debug.Log("Game Over");
+        // Debug.Log("Game Over");
         // 停止所有正在执行的 Invoke 调用
         CancelInvoke("StartNewRound");
 

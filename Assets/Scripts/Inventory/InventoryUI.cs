@@ -44,21 +44,24 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
+        if (playerInputs == null) { FindPlayerInputs(); return; }
+
+        // Consume inventory input every frame so it doesn't trigger after a UI panel closes.
+        bool inventoryPressed = playerInputs.GetInventoryInput();
+        
         if (MiniGameManager.Instance != null && MiniGameManager.Instance.IsInMiniGame())
             return;
 
         if (GameManager.Instance != null && !GameManager.Instance.gameActive)
             return;
 
-        if (playerInputs == null) { FindPlayerInputs(); return; }
-
-        // Consume inventory input every frame so it doesn't trigger after a UI panel closes.
-        bool inventoryPressed = playerInputs.GetInventoryInput();
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+            return;
 
         // block inventory toggle if confirm or password panel is open
         if (confirmPanel.activeSelf || passwordPanel.activeSelf) return;
 
-        if (inventoryPressed && PauseManager.Instance != null && !PauseManager.Instance.IsPaused) ToggleInventory();
+        if (inventoryPressed) ToggleInventory();
     }
 
     void FindPlayerInputs()

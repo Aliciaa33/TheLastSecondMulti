@@ -38,7 +38,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = playerName;
         ConnectToServer.Instance.SetPlayerName(playerName);
 
-        Debug.Log($"Playing as: {playerName}");
+        // Debug.Log($"Playing as: {playerName}");
 
         // Start single player game
         PhotonNetwork.OfflineMode = false;
@@ -57,7 +57,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = playerName;
         ConnectToServer.Instance.SetPlayerName(playerName);
 
-        Debug.Log($"Creating room as: {playerName}");
+        // Debug.Log($"Creating room as: {playerName}");
 
         // Set mode to multiplayer
         PhotonNetwork.OfflineMode = false;
@@ -71,7 +71,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log("Waiting for connection...");
+            // Debug.Log("Waiting for connection...");
             StartCoroutine(WaitForConnectionThenLoadScene("CreateRoom"));
         }
     }
@@ -85,7 +85,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = playerName;
         ConnectToServer.Instance.SetPlayerName(playerName);
 
-        Debug.Log($"Looking for rooms as: {playerName}");
+        // Debug.Log($"Looking for rooms as: {playerName}");
 
         // Set mode to multiplayer
         PhotonNetwork.OfflineMode = false;
@@ -98,7 +98,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log("Waiting for connection...");
+            // Debug.Log("Waiting for connection...");
             StartCoroutine(WaitForConnectionThenLoadScene("RoomList"));
         }
     }
@@ -169,7 +169,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined room: " + PhotonNetwork.CurrentRoom.Name);
+        // Debug.Log("Joined room: " + PhotonNetwork.CurrentRoom.Name);
         SceneManager.LoadScene("Game");
     }
 

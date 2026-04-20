@@ -38,6 +38,10 @@ public class PauseManager : MonoBehaviour
 
     void Awake()
     {
+        // Initialize singleton instance
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+
         // pauseCanvas = GameObject.Find("PauseCanvas");
         settingsSection = GameObject.Find("SettingsSection");
         musicSlider = GameObject.Find("MusicSlider")?.GetComponent<Slider>();
