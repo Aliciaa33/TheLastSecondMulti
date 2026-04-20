@@ -85,38 +85,38 @@ public class GameOverPanelStyler : MonoBehaviour
         // ── Tag line: "// MISSION FAILED //" or "// MISSION ACCOMPLISHED //" ──
         SetTMP("ResultTagText",
             win ? "// MISSION ACCOMPLISHED //" : "// MISSION FAILED //",
-            accent, 13, FontStyles.Normal, spacing: 3f);
+            accent, 18, FontStyles.Normal, spacing: 3f);
 
         // ── Heading: "GAME OVER" or "VICTORY" ────────────────────────────
         SetTMP("ResultHeadingText",
             win ? "VICTORY" : "GAME OVER",
-            accent, 42, FontStyles.Bold, spacing: 2f,
+            accent, 46, FontStyles.Bold, spacing: 2f,
             outline: true, outlineColor: new Color(accent.r, accent.g, accent.b, 0.3f));
 
         // ── Sub text ──────────────────────────────────────────────────────
         SetTMP("ResultSubText",
             win ? "All bombs defused. The city has been saved."
                 : "All operatives lost. The bomb was not defused in time.",
-            new Color(1,1,1,0.45f), 14, FontStyles.Normal);
+            new Color(1,1,1,0.45f), 20, FontStyles.Normal);
 
         // ── Stats ─────────────────────────────────────────────────────────
         // HP stat
         SetTMP("StatHP",    currentHP.ToString(),
             win ? NeonGreen : NeonRed, 28, FontStyles.Bold);
         SetTMP("StatHPLabel", "HP REMAINING",
-            new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.4f), 11, FontStyles.Normal, spacing:2f);
+            new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.4f), 16, FontStyles.Normal, spacing:2f);
 
         // Bombs stat
         SetTMP("StatBombs", $"{defusedBombs} / {goal}",
             NeonBlue, 28, FontStyles.Bold);
         SetTMP("StatBombsLabel", "BOMBS DEFUSED",
-            new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.4f), 11, FontStyles.Normal, spacing:2f);
+            new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.4f), 16, FontStyles.Normal, spacing:2f);
 
         // Hints stat
         SetTMP("StatHints", hintsCollected.ToString(),
             NeonBlue, 28, FontStyles.Bold);
         SetTMP("StatHintsLabel", "HINTS FOUND",
-            new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.4f), 11, FontStyles.Normal, spacing:2f);
+            new Color(NeonBlue.r, NeonBlue.g, NeonBlue.b, 0.4f), 16, FontStyles.Normal, spacing:2f);
 
         // Stats container border colour
         Image statsBg = FindImage("StatsContainer");
@@ -165,7 +165,7 @@ public class GameOverPanelStyler : MonoBehaviour
         {
             label.color     = textCol;
             label.fontStyle = FontStyles.Bold;
-            label.fontSize  = 20;
+            label.fontSize  = 28;
             string dot = isQuit         ? "<color=#FF6666>•</color>"
                        : isWinRestart   ? "<color=#05190A>•</color>"
                        :                  "<color=#1AE4FF>•</color>";
