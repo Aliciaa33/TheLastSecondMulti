@@ -120,6 +120,11 @@ namespace StarterAssets
 				!GameManager.Instance.gameActive)
 				return;
 
+			// Don't interfere with cursor when pause panel is open
+			if (PauseManager.Instance != null &&
+				PauseManager.Instance.IsPaused)
+				return;
+
 			if (BombInteraction.confirmDefuseUI != null && BombInteraction.confirmDefuseUI.activeInHierarchy) return;
 			if (BombInteraction.passwordInputUI != null && BombInteraction.passwordInputUI.activeInHierarchy) return;
 
