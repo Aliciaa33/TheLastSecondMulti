@@ -28,7 +28,7 @@ public class CreateRoom : MonoBehaviourPunCallbacks
         if (startButton != null)
         {
             startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-            Debug.Log("IsMasterClient: " + PhotonNetwork.IsMasterClient);
+            // Debug.Log("IsMasterClient: " + PhotonNetwork.IsMasterClient);
         }
 
         if (isRoomCreator)
@@ -42,7 +42,7 @@ public class CreateRoom : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogWarning("[CreateRoom] Not room creator and not in room. Skipping room creation.");
+            // Debug.LogWarning("[CreateRoom] Not room creator and not in room. Skipping room creation.");
         }
 
         // Play background music
@@ -75,7 +75,7 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
         PhotonNetwork.CreateRoom(roomName, roomOptions);
         createdRoomName = roomName;
-        Debug.Log("Auto-creating room: " + roomName);
+        // Debug.Log("Auto-creating room: " + roomName);
 
         RefreshPlayerList();
     }
@@ -90,11 +90,11 @@ public class CreateRoom : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient)
         {
-            Debug.LogWarning("Only room creator can start the game!");
+            // Debug.LogWarning("Only room creator can start the game!");
             return;
         }
 
-        Debug.Log("Starting game with " + PhotonNetwork.CurrentRoom.PlayerCount + " players");
+        // Debug.Log("Starting game with " + PhotonNetwork.CurrentRoom.PlayerCount + " players");
 
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             ConnectToServer.Instance.SetGameMode(GameMode.SinglePlayer);
@@ -176,7 +176,7 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
     public override void OnCreatedRoom()
     {
-        Debug.Log("Room created successfully: " + PhotonNetwork.CurrentRoom.Name);
+        // Debug.Log("Room created successfully: " + PhotonNetwork.CurrentRoom.Name);
         isRoomCreated = true;
         RefreshPlayerList();
     }
@@ -188,7 +188,7 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined room callback in CreateRoom: " + PhotonNetwork.CurrentRoom.Name);
+        // Debug.Log("Joined room callback in CreateRoom: " + PhotonNetwork.CurrentRoom.Name);
         isRoomCreated = true;
         RefreshPlayerList();
         if (startButton != null)
@@ -197,19 +197,19 @@ public class CreateRoom : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.Log("Player joined: " + newPlayer.NickName);
+        // Debug.Log("Player joined: " + newPlayer.NickName);
         RefreshPlayerList();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("Player left: " + otherPlayer.NickName);
+        // Debug.Log("Player left: " + otherPlayer.NickName);
         RefreshPlayerList();
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        Debug.Log("Master client switched to: " + newMasterClient.NickName);
+        // Debug.Log("Master client switched to: " + newMasterClient.NickName);
         if (startButton != null)
             startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
     }

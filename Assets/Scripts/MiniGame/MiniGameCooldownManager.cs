@@ -53,14 +53,14 @@ public class MiniGameCooldownManager : MonoBehaviour
     {
         _onCooldown = true;
         _cooldownRemaining = duration;
-        Debug.Log($"Mini game cooldown started: {duration}s");
+        // Debug.Log($"Mini game cooldown started: {duration}s");
     }
 
     public void ResetCooldown()
     {
         _onCooldown = false;
         _cooldownRemaining = 0f;
-        Debug.Log("Mini game cooldown reset");
+        // Debug.Log("Mini game cooldown reset");
     }
     public bool IsOnCooldown() => _onCooldown;
     public float GetRemainingCooldown() => _cooldownRemaining;

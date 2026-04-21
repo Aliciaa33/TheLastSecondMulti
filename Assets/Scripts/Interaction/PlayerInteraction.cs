@@ -64,6 +64,9 @@ public class PlayerInteraction : MonoBehaviourPun
 
     void CheckForInteractable()
     {
+        // Prevent null reference exceptions if playerCamera is missing
+        if (playerCamera == null) return;
+
         RaycastHit hit;
         Vector3 rayOrigin = transform.position + Vector3.up * 0.3f;
         Vector3 rayDirection = playerCamera.transform.forward;

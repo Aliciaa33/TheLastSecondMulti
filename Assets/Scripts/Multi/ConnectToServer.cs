@@ -54,7 +54,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         {
             // Reset mini game cooldown for fresh game session
             MiniGameCooldownManager.Instance?.ResetCooldown();
-            Debug.Log($"Cooldown reset on new game scene load: {scene.name}, remaining: {MiniGameCooldownManager.Instance?.GetRemainingCooldown()}s");
+            // Debug.Log($"Cooldown reset on new game scene load: {scene.name}, remaining: {MiniGameCooldownManager.Instance?.GetRemainingCooldown()}s");
         }
 
         // The game scene locks the cursor itself via StarterAssetsInputs.
@@ -94,7 +94,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("[ConnectToServer] Joined room: " + PhotonNetwork.CurrentRoom.Name);
+        // Debug.Log("[ConnectToServer] Joined room: " + PhotonNetwork.CurrentRoom.Name);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -105,7 +105,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
         if (isIntentional)
         {
             // Expected — log at Info level only, never trigger dropout flow
-            Debug.Log($"[ConnectToServer] Disconnected intentionally: {cause}");
+            // Debug.Log($"[ConnectToServer] Disconnected intentionally: {cause}");
             watchForDisconnect = false;
             return;
         }

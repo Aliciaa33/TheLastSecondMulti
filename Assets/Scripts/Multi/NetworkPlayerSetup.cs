@@ -38,7 +38,7 @@ public class NetworkPlayerSetup : MonoBehaviourPun
         }
 
         gameObject.tag = "Player";
-        Debug.Log("SetupLocalPlayer complete");
+        // Debug.Log("SetupLocalPlayer complete");
         SetupParameterSync();
     }
 

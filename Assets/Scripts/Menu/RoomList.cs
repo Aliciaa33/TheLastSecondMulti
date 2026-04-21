@@ -43,7 +43,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         ConnectToServer.Instance.SetPlayerName(playerName);
         ConnectToServer.Instance.SetIsRoomCreator(true);
 
-        Debug.Log($"Creating room as: {playerName}");
+        // Debug.Log($"Creating room as: {playerName}");
 
         // Set mode to multiplayer
         PhotonNetwork.OfflineMode = false;
@@ -56,7 +56,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log("Waiting for connection...");
+            // Debug.Log("Waiting for connection...");
             StartCoroutine(WaitForConnectionThenLoadScene("CreateRoom"));
         }
     }
@@ -115,7 +115,7 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     private void JoinRoom(string roomName)
     {
-        Debug.Log("Joining room: " + roomName);
+        // Debug.Log("Joining room: " + roomName);
         ConnectToServer.Instance.SetGameMode(GameMode.Multiplayer);
         ConnectToServer.Instance.SetIsRoomCreator(false);
         PhotonNetwork.JoinRoom(roomName);
@@ -132,7 +132,7 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Debug.Log("Room list updated. Total rooms: " + roomList.Count);
+        // Debug.Log("Room list updated. Total rooms: " + roomList.Count);
 
         foreach (RoomInfo room in roomList)
         {
@@ -151,7 +151,7 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("✓ Joined room: " + PhotonNetwork.CurrentRoom.Name);
+        // Debug.Log("✓ Joined room: " + PhotonNetwork.CurrentRoom.Name);
         SceneManager.LoadScene("CreateRoom");
     }
 
@@ -163,12 +163,12 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        Debug.Log("✓ Joined Lobby");
+        // Debug.Log("✓ Joined Lobby");
     }
 
     public override void OnLeftLobby()
     {
-        Debug.Log("Left Lobby");
+        // Debug.Log("Left Lobby");
     }
 
     System.Collections.IEnumerator WaitForConnectionThenLoadScene(string sceneName)

@@ -48,7 +48,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             vCam.LookAt = camTarget;
         }
 
-        Debug.Log("Single player spawned");
+        // Debug.Log("Single player spawned");
     }
 
     private void SpawnNetworkPlayer()
@@ -67,13 +67,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             spawnPoint.rotation
         );
 
-        Debug.Log($"Spawned player at index {spawnIndex} as ActorNumber {PhotonNetwork.LocalPlayer.ActorNumber}");
+        // Debug.Log($"Spawned player at index {spawnIndex} as ActorNumber {PhotonNetwork.LocalPlayer.ActorNumber}");
     }
 
     // If a player disconnects mid-game
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log($"{otherPlayer.NickName} left the game");
+        // Debug.Log($"{otherPlayer.NickName} left the game");
 
         if (UIManager.Instance != null)
             UIManager.Instance.ShowToast($"{otherPlayer.NickName} left", 4);
@@ -88,7 +88,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 pv.Owner.ActorNumber == otherPlayer.ActorNumber)
             {
                 toDestroy.Add(pv.gameObject);
-                Debug.Log($"Queued for destroy: {pv.gameObject.name}");
+                // Debug.Log($"Queued for destroy: {pv.gameObject.name}");
             }
         }
 
